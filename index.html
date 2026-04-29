@@ -8,10 +8,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DailyOps">
   <title>Daily Operation System</title>
+  
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
   <link rel="apple-touch-icon" href="icon-192.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -43,7 +45,6 @@
       position: relative;
     }
 
-    /* Background grid */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -55,7 +56,6 @@
       z-index: 0;
     }
 
-    /* Ambient glow */
     body::after {
       content: '';
       position: fixed;
@@ -69,7 +69,6 @@
 
     .app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 16px 40px; }
 
-    /* ── HEADER ── */
     .header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 20px 0 16px;
@@ -95,7 +94,6 @@
     }
     .icon-btn:hover { border-color: var(--amber); color: var(--amber); }
 
-    /* ── STATUS BAR ── */
     .status-bar {
       display: flex; align-items: center; gap: 8px;
       padding: 8px 12px;
@@ -125,7 +123,6 @@
       color: var(--text-mid);
     }
 
-    /* ── SYSTEM BADGE ── */
     .system-badge {
       background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
       border: 1px solid var(--border);
@@ -172,7 +169,6 @@
       line-height: 1.5;
     }
 
-    /* ── CURRENT BLOCK ── */
     .current-block {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -216,7 +212,6 @@
     }
     .current-block .cb-next strong { color: var(--amber); }
 
-    /* ── TIMELINE ── */
     .timeline-header {
       font-family: 'DM Mono', monospace;
       font-size: 10px;
@@ -281,7 +276,6 @@
       color: var(--green);
     }
 
-    /* ── NOTIFICATION CARD ── */
     .notif-card {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -310,7 +304,6 @@
     .btn-sm.granted { border-color: var(--green); color: var(--green); cursor: default; }
     .btn-sm.granted:hover { background: transparent; }
 
-    /* ── SETUP SCREEN ── */
     #setup-screen {
       padding: 20px 0;
     }
@@ -387,748 +380,9 @@
     .btn-primary:hover { background: #fbbf24; }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* ── AUTH SCREEN ── */
     #auth-screen { padding: 40px 0; text-align: center; }
     .auth-icon { font-size: 48px; margin-bottom: 20px; }
     .auth-title {
       font-family: 'Bebas Neue', sans-serif;
       font-size: 32px;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-    .auth-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.6; }
-    .btn-google {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 12px 24px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-google:hover { border-color: var(--amber); }
-    .btn-google svg { width: 20px; height: 20px; }
-
-    /* ── LOADING ── */
-    #loading-screen { padding: 60px 0; text-align: center; }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 2px solid var(--border);
-      border-top-color: var(--amber);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 20px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); }
-
-    /* ── SURVIVAL MODE ── */
-    .survival-banner {
-      background: rgba(239,68,68,0.08);
-      border: 1px solid rgba(239,68,68,0.3);
-      border-radius: var(--radius);
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: 12px;
-      color: var(--text-mid);
-    }
-    .survival-banner .sb-icon { font-size: 18px; }
-
-    /* ── REFRESH BTN ── */
-    .refresh-row {
-      display: flex; gap: 8px; margin-bottom: 16px;
-    }
-    .btn-outline {
-      flex: 1; padding: 10px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-mid);
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 1px;
-    }
-    .btn-outline:hover { border-color: var(--amber); color: var(--amber); }
-
-    /* ── EMPTY / ERROR ── */
-    .msg-box {
-      text-align: center; padding: 40px 20px;
-      color: var(--text-dim); font-size: 13px; line-height: 1.7;
-    }
-    .msg-box .mb-icon { font-size: 32px; margin-bottom: 12px; }
-
-    /* ── ANIMATIONS ── */
-    .fade-in { animation: fadeIn 0.4s ease forwards; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── FOOTER ── */
-    .footer {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: var(--text-dim);
-      padding: 20px 0 0;
-      letter-spacing: 1px;
-      opacity: 0.5;
-    }
-
-    @media (max-width: 380px) {
-      .block-item .bi-desc { display: none; }
-      .system-badge .sys-name { font-size: 22px; }
-    }
-  </style>
-</head>
-<body>
-<div class="app">
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!-- SETUP SCREEN                                         -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <div id="setup-screen" style="display:none">
-    <div class="header">
-      <div class="logo">DailyOps<span>OPERATION SYSTEM</span></div>
-    </div>
-
-    <div class="setup-title">ERSTEINRICHTUNG<br><span>GOOGLE CALENDAR</span></div>
-    <div class="setup-sub">Einmalige Einrichtung. Danach läuft alles automatisch.</div>
-
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 01</div>
-      <h4>Google Cloud Projekt erstellen</h4>
-      <p>Öffne <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → Neues Projekt erstellen (z.B. "DailySystem") → <strong>Google Calendar API</strong> aktivieren.</p>
-    </div>
-
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 02</div>
-      <h4>OAuth-Client-ID erstellen</h4>
-      <p>APIs & Dienste → Anmeldedaten → <strong>+ Anmeldedaten erstellen</strong> → OAuth-Client-ID → Typ: <code>Webanwendung</code></p>
-      <p style="margin-top:8px">Unter <strong>Autorisierte JavaScript-Quellen</strong> diese URL eintragen:<br>
-      <code id="origin-hint">wird ermittelt...</code></p>
-    </div>
-
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 03</div>
-      <h4>Client-ID hier eintragen</h4>
-      <p>Kopiere deine Client-ID (endet auf <code>.apps.googleusercontent.com</code>):</p>
-      <div class="setup-input-wrap">
-        <input class="setup-input" id="client-id-input"
-               placeholder="123456789-abc...apps.googleusercontent.com"
-               type="text" autocomplete="off" spellcheck="false">
-      </div>
-    </div>
-
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 04</div>
-      <h4>Kalender-Event-Titel prüfen</h4>
-      <p>Deine Schicht-Events in Google Calendar müssen enthalten:<br>
-      <code>Cottbus Diakonie Zuschka</code><br>
-      Die Startzeit bestimmt die Schichtart (07:00 = Früh, 19:00 = Nacht).</p>
-    </div>
-
-    <button class="btn-primary" id="setup-save-btn" onclick="saveSetup()">
-      EINRICHTEN & STARTEN
-    </button>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!-- AUTH SCREEN                                          -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <div id="auth-screen" style="display:none">
-    <div class="header">
-      <div class="logo">DailyOps<span>OPERATION SYSTEM</span></div>
-      <div class="header-actions">
-        <div class="icon-btn" onclick="goToSetup()" title="Einstellungen">⚙</div>
-      </div>
-    </div>
-    <div class="auth-icon">📅</div>
-    <div class="auth-title">GOOGLE CALENDAR<br>VERBINDEN</div>
-    <div class="auth-sub">Das System liest deinen Kalender, erkennt automatisch<br>deine Schicht und plant deinen Tag.</div>
-    <button class="btn-google" onclick="startAuth()">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-      </svg>
-      Mit Google anmelden
-    </button>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!-- LOADING SCREEN                                       -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <div id="loading-screen" style="display:none">
-    <div class="header">
-      <div class="logo">DailyOps<span>OPERATION SYSTEM</span></div>
-    </div>
-    <div class="spinner"></div>
-    <div class="loading-text" id="loading-text">Kalender wird geladen...</div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!-- DASHBOARD                                            -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <div id="dashboard" style="display:none">
-    <div class="header">
-      <div class="logo">DailyOps<span>OPERATION SYSTEM</span></div>
-      <div class="header-actions">
-        <div class="icon-btn" onclick="reload()" title="Aktualisieren">↻</div>
-        <div class="icon-btn" onclick="goToSetup()" title="Einstellungen">⚙</div>
-      </div>
-    </div>
-
-    <!-- Status -->
-    <div class="status-bar">
-      <div class="status-dot" id="status-dot"></div>
-      <span id="status-text">–</span>
-      <span class="date" id="status-date">–</span>
-    </div>
-
-    <!-- Notification permission -->
-    <div class="notif-card" id="notif-card">
-      <div class="notif-icon">🔔</div>
-      <div class="notif-text">
-        <h4>Benachrichtigungen aktivieren</h4>
-        <p>Für automatische Block-Alerts</p>
-      </div>
-      <button class="btn-sm" id="notif-btn" onclick="requestNotifPermission()">ERLAUBEN</button>
-    </div>
-
-    <!-- System badge -->
-    <div class="system-badge fade-in" id="system-badge">
-      <div class="sys-num" id="sys-num">–</div>
-      <div class="sys-label" id="sys-label">Aktives System</div>
-      <div class="sys-name" id="sys-name">–</div>
-      <div class="sys-desc" id="sys-desc">–</div>
-    </div>
-
-    <!-- Current block -->
-    <div class="current-block fade-in" id="current-block" style="display:none">
-      <div class="cb-label">⬤ AKTIVER BLOCK</div>
-      <div class="cb-content">
-        <div class="cb-emoji" id="cb-emoji">–</div>
-        <div class="cb-text">
-          <div class="cb-title" id="cb-title">–</div>
-          <div class="cb-desc" id="cb-desc">–</div>
-        </div>
-      </div>
-      <div class="cb-next" id="cb-next"></div>
-    </div>
-
-    <!-- Timeline -->
-    <div class="timeline-header">TAGESPLAN</div>
-    <div class="timeline" id="timeline"></div>
-
-    <!-- Refresh -->
-    <div class="refresh-row">
-      <button class="btn-outline" onclick="reload()">↻ AKTUALISIEREN</button>
-      <button class="btn-outline" onclick="toggleSurvival()">🚨 SURVIVAL MODE</button>
-    </div>
-
-    <div class="footer">DOMENICK KHAN · DAILY OPERATION SYSTEM · v1.0</div>
-  </div>
-
-</div><!-- .app -->
-
-<!-- Google Identity Services -->
-<script src="https://accounts.google.com/gsi/client" async></script>
-
-<script>
-// ═══════════════════════════════════════════════════════════════
-// SCHEDULE DATA
-// ═══════════════════════════════════════════════════════════════
-const SCHEDULE_KEYWORD = "Cottbus Diakonie Zuschka";
-
-const SYSTEM_META = {
-  1: { label: "SYSTEM 01", name: "FRÜHSCHICHT", desc: "07:00 – 19:00 Uhr · Deep Work am Vormittag · Feierabend ab 18:00", icon: "🚀" },
-  2: { label: "SYSTEM 02", name: "NACHTSCHICHT", desc: "19:00 – 07:00 Uhr · Volle Konzentration nachts · Schlaf-Vorbereitung ab 06:00", icon: "🌙" },
-  3: { label: "SYSTEM 03", name: "FREI – FRÜH", desc: "Freier Tag · Früh-Rhythmus · Business & Gym am Vormittag", icon: "⚡" },
-  4: { label: "SYSTEM 04", name: "FREI – NACHT", desc: "Freier Tag · Nacht-Rhythmus · Socializing zuerst · Deep Work nachts", icon: "🛌" },
-};
-
-const BLOCKS = {
-  1: [
-    { h:6,  m:0,  e:"🌅", t:"AUFSTEHEN",     d:"Kaffee machen, fertig machen. Abfahrt in 40 Min!",           tag:"START" },
-    { h:7,  m:0,  e:"💻", t:"DEEP WORK",      d:"Priorität 1: Website / Plugins / Automatisierung",           tag:"BLOCK 1" },
-    { h:11, m:0,  e:"🍽️", t:"GROSSE MAHLZEIT",d:"Laptop zu. Essen. Mentaler Reset. Bis 12:00.",               tag:"ANKER" },
-    { h:12, m:0,  e:"📦", t:"MEDIUM WORK",    d:"Pakete schnüren, Bundles, Werbeanzeigen. Bis 15:00.",        tag:"BLOCK 2" },
-    { h:15, m:0,  e:"📋", t:"LOW ENERGY",     d:"Recherche, Admin, E-Mails, Social Media Setup. Bis 18:00.",  tag:"BLOCK 3" },
-    { h:18, m:0,  e:"🔒", t:"FEIERABEND",     d:"KEIN BUSINESS! Dokumente · Abwaschen · Laptop weg · Letzte Runde", tag:"CLOSE" },
-    { h:19, m:15, e:"🏠", t:"SOCIAL & CHILL", d:"Zuhause. Zeit mit der Freundin. Schlaf um 22:00.",           tag:"ANKER" },
-    { h:22, m:0,  e:"😴", t:"SCHLAF",         d:"Jetzt schlafen. Morgen startet neu. Gute Nacht!",            tag:"SLEEP" },
-  ],
-  2: [
-    { h:16, m:30, e:"🌅", t:"AUFSTEHEN",      d:"Duschen, Kaffee, fertig machen. Abfahrt bis 18:30!",        tag:"START",  nd:false },
-    { h:19, m:0,  e:"💻", t:"DEEP WORK",      d:"Priorität 1: Automatisierung / Excel / Website. Bis 23:00.", tag:"BLOCK 1",nd:false },
-    { h:23, m:0,  e:"🍽️", t:"GROSSE MAHLZEIT",d:"Laptop zu. Essen. Fokus-Reset. Bis 00:00.",                 tag:"ANKER",  nd:false },
-    { h:0,  m:0,  e:"📦", t:"MEDIUM WORK",    d:"Website-Texte, Design, Bundles. Bis 03:30.",                 tag:"BLOCK 2",nd:true  },
-    { h:3,  m:30, e:"📋", t:"LOW ENERGY",     d:"Werbeanzeigen kreieren, Recherche, Admin. Bis 06:00.",       tag:"BLOCK 3",nd:true  },
-    { h:6,  m:0,  e:"🔒", t:"FEIERABEND",     d:"KEIN BUSINESS! Dokumente · Laptop weg · Runde · Abwaschen", tag:"CLOSE",  nd:true  },
-    { h:7,  m:30, e:"🕶️", t:"LICHT-MGMT",    d:"Sonnenbrille aufsetzen! Bettfertig. Schlafen ab 10:00.",    tag:"ANKER",  nd:true  },
-    { h:10, m:0,  e:"😴", t:"SCHLAF",         d:"Schlafen bis 16:30 Uhr. Kein Handy. Kein Licht.",           tag:"SLEEP",  nd:true  },
-  ],
-  3: [
-    { h:7,  m:30, e:"🌅", t:"GUTEN MORGEN",   d:"Frühstück mit der Freundin. Kein Stress.",                  tag:"START" },
-    { h:8,  m:30, e:"💻", t:"DEEP WORK",      d:"Business-Produktion. Priorität 1. Bis 11:30.",               tag:"BLOCK 1" },
-    { h:11, m:30, e:"💪", t:"GYM",            d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",          tag:"GYM" },
-    { h:14, m:30, e:"🥘", t:"MEAL PREP",      d:"Vorkochen für die Woche. Bis 15:30.",                        tag:"ANKER" },
-    { h:15, m:30, e:"⚓", t:"ANKER PAUSE",    d:"Zeit mit der Freundin. Chill. Kein Business bis 19:30!",     tag:"PAUSE" },
-    { h:19, m:30, e:"📋", t:"REVIEW & PLAN",  d:"Rückblick + Vorbereitung nächste Schicht. Bis 20:30.",       tag:"BLOCK 2" },
-    { h:20, m:30, e:"🎮", t:"ENTSPANNUNG",    d:"Socializing, Chill, Gaming. Schlaf um 22:30.",               tag:"CHILL" },
-    { h:22, m:30, e:"😴", t:"SCHLAF",         d:"Jetzt schlafen. Du hast heute alles richtig gemacht!",       tag:"SLEEP" },
-  ],
-  4: [
-    { h:16, m:0,  e:"🌅", t:"AUFSTEHEN",      d:"Große Mahlzeit + Anker Pause mit der Freundin bis 18:30.", tag:"START",  nd:false },
-    { h:18, m:30, e:"💪", t:"GYM",            d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",         tag:"GYM",    nd:false },
-    { h:21, m:0,  e:"💻", t:"DEEP WORK",      d:"Business-Kernaufgaben. Volle Konzentration. Bis 00:00.",    tag:"BLOCK 1",nd:false },
-    { h:0,  m:0,  e:"⚓", t:"GAMING & CHILL", d:"Gaming / Chill / Nichts tun. Kein Business! Bis 02:30.",   tag:"PAUSE",  nd:true  },
-    { h:2,  m:30, e:"📦", t:"MEDIUM WORK",    d:"Kreative Aufgaben. Letzter Block des Tages.",               tag:"BLOCK 2",nd:true  },
-    { h:4,  m:0,  e:"😴", t:"SCHLAF",         d:"Jetzt schlafen. Je nach Schichtplan morgen.",               tag:"SLEEP",  nd:true  },
-  ],
-};
-
-// ═══════════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════════
-let state = {
-  clientId: '',
-  accessToken: null,
-  tokenExpiry: 0,
-  activeSystem: null,
-  schedule: [],
-  survivalMode: false,
-  notifGranted: false,
-};
-let notifTimers = [];
-let clockInterval = null;
-
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
-window.addEventListener('load', () => {
-  // Register service worker
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
-
-  // Set origin hint
-  const oh = document.getElementById('origin-hint');
-  if (oh) oh.textContent = location.origin;
-
-  // Check notification permission
-  if ('Notification' in window && Notification.permission === 'granted') {
-    state.notifGranted = true;
-  }
-
-  // Load saved state
-  const saved = localStorage.getItem('dailyops_state');
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      state.clientId = parsed.clientId || '';
-    } catch(e) {}
-  }
-
-  if (!state.clientId) {
-    showScreen('setup');
-  } else {
-    showScreen('auth');
-  }
-
-  updateDate();
-  setInterval(updateDate, 30000);
-});
-
-// ═══════════════════════════════════════════════════════════════
-// SETUP
-// ═══════════════════════════════════════════════════════════════
-function saveSetup() {
-  const input = document.getElementById('client-id-input');
-  const val = input.value.trim();
-  if (!val || !val.includes('.apps.googleusercontent.com')) {
-    input.style.borderColor = 'var(--red)';
-    setTimeout(() => input.style.borderColor = '', 2000);
-    return;
-  }
-  state.clientId = val;
-  localStorage.setItem('dailyops_state', JSON.stringify({ clientId: val }));
-  showScreen('auth');
-}
-
-function goToSetup() {
-  // Pre-fill existing client ID
-  setTimeout(() => {
-    const input = document.getElementById('client-id-input');
-    if (input && state.clientId) input.value = state.clientId;
-    const oh = document.getElementById('origin-hint');
-    if (oh) oh.textContent = location.origin;
-  }, 50);
-  showScreen('setup');
-}
-
-// ═══════════════════════════════════════════════════════════════
-// GOOGLE AUTH
-// ═══════════════════════════════════════════════════════════════
-function startAuth() {
-  if (!state.clientId) { showScreen('setup'); return; }
-
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: state.clientId,
-    scope: 'https://www.googleapis.com/auth/calendar.readonly',
-    callback: (resp) => {
-      if (resp.error) {
-        alert('Authentifizierung fehlgeschlagen: ' + resp.error);
-        return;
-      }
-      state.accessToken = resp.access_token;
-      state.tokenExpiry = Date.now() + (resp.expires_in * 1000);
-      loadDashboard();
-    },
-  });
-  client.requestAccessToken();
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CALENDAR API
-// ═══════════════════════════════════════════════════════════════
-async function fetchCalendarEvents(dateStr) {
-  const dayStart = dateStr + 'T00:00:00Z';
-  const dayEnd   = dateStr + 'T23:59:59Z';
-  const url = new URL('https://www.googleapis.com/calendar/v3/calendars/primary/events');
-  url.searchParams.set('timeMin', dayStart);
-  url.searchParams.set('timeMax', dayEnd);
-  url.searchParams.set('singleEvents', 'true');
-  url.searchParams.set('orderBy', 'startTime');
-  url.searchParams.set('q', SCHEDULE_KEYWORD);
-
-  const resp = await fetch(url, {
-    headers: { Authorization: `Bearer ${state.accessToken}` }
-  });
-  if (!resp.ok) throw new Error('Calendar API Fehler: ' + resp.status);
-  const data = await resp.json();
-  return data.items || [];
-}
-
-function getShiftType(events) {
-  for (const ev of events) {
-    const sum = ev.summary || '';
-    if (sum.toLowerCase().includes(SCHEDULE_KEYWORD.toLowerCase())) {
-      const startStr = ev.start?.dateTime || ev.start?.date || '';
-      if (!startStr) continue;
-      const hour = new Date(startStr).getHours();
-      if (hour >= 5 && hour < 14) return 'frueh';
-      if (hour >= 17 || hour < 5) return 'nacht';
-    }
-  }
-  return null;
-}
-
-async function determineSystem() {
-  const today = getDateStr(new Date());
-  let events = await fetchCalendarEvents(today);
-  let shift = getShiftType(events);
-
-  if (shift === 'frueh') return 1;
-  if (shift === 'nacht') return 2;
-
-  // Free day: look back 14 days
-  for (let i = 1; i <= 14; i++) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const ds = getDateStr(d);
-    events = await fetchCalendarEvents(ds);
-    shift = getShiftType(events);
-    if (shift === 'frueh') return 3;
-    if (shift === 'nacht') return 4;
-  }
-  return 3; // fallback
-}
-
-// ═══════════════════════════════════════════════════════════════
-// DASHBOARD
-// ═══════════════════════════════════════════════════════════════
-async function loadDashboard() {
-  showScreen('loading');
-  setLoadingText('Kalender wird analysiert...');
-
-  try {
-    const systemId = await determineSystem();
-    state.activeSystem = systemId;
-    state.schedule = buildSchedule(systemId);
-    setLoadingText('Zeitplan wird geladen...');
-    await delay(400);
-    renderDashboard();
-    showScreen('dashboard');
-    startClock();
-    scheduleNotifications();
-  } catch (err) {
-    console.error(err);
-    setLoadingText('Fehler: ' + err.message + ' – Bitte neu anmelden.');
-    setTimeout(() => showScreen('auth'), 3000);
-  }
-}
-
-function buildSchedule(systemId) {
-  const blocks = BLOCKS[systemId];
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  return blocks.map(b => {
-    const base = b.nd ? tomorrow : today;
-    const dt = new Date(base);
-    dt.setHours(b.h, b.m, 0, 0);
-    return { ...b, datetime: dt };
-  });
-}
-
-function renderDashboard() {
-  const sys = state.activeSystem;
-  const meta = SYSTEM_META[sys];
-
-  // System badge
-  document.getElementById('sys-num').textContent = sys;
-  document.getElementById('sys-label').textContent = meta.label + ' · ' + meta.icon;
-  document.getElementById('sys-name').textContent = meta.name;
-  document.getElementById('sys-desc').textContent = meta.desc;
-
-  // Status
-  setStatus('green', 'AKTIV · System ' + sys, true);
-
-  updateCurrentBlock();
-  renderTimeline();
-  updateNotifUI();
-}
-
-function updateCurrentBlock() {
-  const now = new Date();
-  const sched = state.schedule;
-  let currentIdx = -1;
-
-  for (let i = sched.length - 1; i >= 0; i--) {
-    if (sched[i].datetime <= now) { currentIdx = i; break; }
-  }
-
-  const cb = document.getElementById('current-block');
-  if (currentIdx === -1) {
-    cb.style.display = 'none';
-    return;
-  }
-
-  const block = sched[currentIdx];
-  cb.style.display = 'block';
-  document.getElementById('cb-emoji').textContent = block.e;
-  document.getElementById('cb-title').textContent = block.t;
-  document.getElementById('cb-desc').textContent = block.d;
-
-  const nextBlock = sched[currentIdx + 1];
-  const nextEl = document.getElementById('cb-next');
-  if (nextBlock) {
-    const diff = Math.round((nextBlock.datetime - now) / 60000);
-    const diffStr = diff > 60
-      ? Math.floor(diff/60) + 'h ' + (diff%60) + 'min'
-      : diff + ' Minuten';
-    nextEl.innerHTML = `Nächster Block: <strong>${nextBlock.e} ${nextBlock.t}</strong> in ${diffStr} (${fmt(nextBlock.datetime)})`;
-  } else {
-    nextEl.textContent = 'Letzter Block des Tages abgeschlossen.';
-  }
-}
-
-function renderTimeline() {
-  const now = new Date();
-  const tl = document.getElementById('timeline');
-  tl.innerHTML = '';
-
-  state.schedule.forEach((b, i) => {
-    const isPast = b.datetime < now;
-    const isActive = isCurrentBlock(i);
-
-    const div = document.createElement('div');
-    div.className = 'block-item' + (isActive ? ' active' : isPast ? ' done' : ' upcoming');
-
-    div.innerHTML = `
-      <div class="bi-time">${fmt(b.datetime)}</div>
-      <div class="bi-emoji">${b.e}</div>
-      <div class="bi-info">
-        <div class="bi-title">${b.t}</div>
-        <div class="bi-desc">${b.d}</div>
-      </div>
-      <div class="bi-tag">${b.tag}</div>
-    `;
-    tl.appendChild(div);
-  });
-}
-
-function isCurrentBlock(idx) {
-  const now = new Date();
-  const sched = state.schedule;
-  const b = sched[idx];
-  const next = sched[idx + 1];
-  return b.datetime <= now && (!next || next.datetime > now);
-}
-
-function startClock() {
-  if (clockInterval) clearInterval(clockInterval);
-  clockInterval = setInterval(() => {
-    updateCurrentBlock();
-    renderTimeline();
-    updateDate();
-  }, 30000);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// NOTIFICATIONS
-// ═══════════════════════════════════════════════════════════════
-function scheduleNotifications() {
-  notifTimers.forEach(clearTimeout);
-  notifTimers = [];
-
-  if (!state.notifGranted) return;
-
-  const now = new Date();
-  state.schedule.forEach(b => {
-    const delay = b.datetime - now;
-    if (delay > 0 && delay < 86400000) {
-      const t = setTimeout(() => fireNotification(b), delay);
-      notifTimers.push(t);
-    }
-  });
-
-  // Also send to service worker
-  if (navigator.serviceWorker.controller) {
-    const payload = state.schedule
-      .filter(b => b.datetime > now)
-      .map(b => ({ time: b.datetime.getTime(), title: b.t, body: b.d, emoji: b.e }));
-    navigator.serviceWorker.controller.postMessage({ type: 'SCHEDULE', blocks: payload });
-  }
-}
-
-function fireNotification(block) {
-  if (!state.notifGranted) return;
-  const opts = {
-    body: block.d,
-    icon: 'icon-192.png',
-    badge: 'icon-192.png',
-    silent: true,
-    tag: 'dailyops-' + block.h + '-' + block.m,
-    renotify: false,
-    vibrate: [100, 50, 100],
-  };
-  if (navigator.serviceWorker.controller) {
-    navigator.serviceWorker.controller.postMessage({
-      type: 'NOTIFY', title: block.e + ' ' + block.t, opts
-    });
-  } else {
-    new Notification(block.e + ' ' + block.t, opts);
-  }
-  // Update UI
-  updateCurrentBlock();
-  renderTimeline();
-}
-
-async function requestNotifPermission() {
-  const perm = await Notification.requestPermission();
-  state.notifGranted = perm === 'granted';
-  updateNotifUI();
-  if (state.notifGranted && state.schedule.length) {
-    scheduleNotifications();
-  }
-}
-
-function updateNotifUI() {
-  const card = document.getElementById('notif-card');
-  const btn = document.getElementById('notif-btn');
-  if (!('Notification' in window)) {
-    card.style.display = 'none'; return;
-  }
-  if (Notification.permission === 'granted') {
-    state.notifGranted = true;
-    btn.textContent = '✓ AKTIV';
-    btn.classList.add('granted');
-    btn.onclick = null;
-  } else if (Notification.permission === 'denied') {
-    btn.textContent = 'BLOCKIERT';
-    btn.style.borderColor = 'var(--red)';
-    btn.style.color = 'var(--red)';
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// SURVIVAL MODE
-// ═══════════════════════════════════════════════════════════════
-function toggleSurvival() {
-  state.survivalMode = !state.survivalMode;
-  const existing = document.getElementById('survival-banner');
-  if (state.survivalMode) {
-    if (existing) return;
-    const banner = document.createElement('div');
-    banner.id = 'survival-banner';
-    banner.className = 'survival-banner';
-    banner.innerHTML = `
-      <div class="sb-icon">🚨</div>
-      <div><strong>SURVIVAL MODE AKTIV</strong><br>Alle Arbeitsblöcke gestrichen. Nur Anker (Essen, Schlaf) und Feierabend-Routine bleiben. Halte durch!</div>
-    `;
-    const badge = document.getElementById('system-badge');
-    badge.parentNode.insertBefore(banner, badge);
-  } else {
-    if (existing) existing.remove();
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// UI HELPERS
-// ═══════════════════════════════════════════════════════════════
-function showScreen(name) {
-  ['setup-screen','auth-screen','loading-screen','dashboard'].forEach(id => {
-    document.getElementById(id).style.display = 'none';
-  });
-  const map = { setup:'setup-screen', auth:'auth-screen', loading:'loading-screen', dashboard:'dashboard' };
-  document.getElementById(map[name]).style.display = 'block';
-}
-
-function setStatus(type, text, pulse) {
-  const dot = document.getElementById('status-dot');
-  dot.className = 'status-dot' + (type ? ' ' + type : '');
-  document.getElementById('status-text').textContent = text;
-}
-
-function setLoadingText(t) {
-  document.getElementById('loading-text').textContent = t;
-}
-
-function updateDate() {
-  const el = document.getElementById('status-date');
-  if (!el) return;
-  const now = new Date();
-  el.textContent = now.toLocaleDateString('de-DE', { weekday:'short', day:'2-digit', month:'2-digit' })
-    + ' · ' + now.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
-}
-
-function fmt(dt) {
-  return dt.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
-}
-
-function getDateStr(d) {
-  return d.toISOString().split('T')[0];
-}
-
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function reload() {
-  if (!state.accessToken || Date.now() > state.tokenExpiry) {
-    showScreen('auth'); return;
-  }
-  loadDashboard();
-}
-</script>
-</body>
-</html>
+      letter-spacing:
