@@ -2,7 +2,7 @@
   "name": "Daily Operation System",
   "short_name": "DailyOps",
   "description": "Automatische Tagessteuerung für Domenick Khan",
-  "start_url": "/daily-ops/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#080a0f",
   "theme_color": "#080a0f",
