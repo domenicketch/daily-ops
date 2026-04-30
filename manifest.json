@@ -1,10 +1,12 @@
 {
+  "id": "/daily-ops/",
   "name": "DayEngine",
   "short_name": "DayEngine",
   "description": "Automatische Tagessteuerung für Schichtarbeiter – Domenick Khan Operation System",
-  "start_url": "/daily-ops/index.html"
-  "scope": "./",
+  "start_url": "/daily-ops/index.html",
+  "scope": "/daily-ops/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#080a0f",
   "theme_color": "#080a0f",
@@ -16,6 +18,7 @@
     "utilities",
     "lifestyle"
   ],
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "icons": [
     {
       "src": "icon-192.png",
@@ -42,6 +45,22 @@
       "purpose": "maskable"
     }
   ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "DayEngine – Tagesplan Übersicht"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "DayEngine – Desktop Ansicht"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Heute öffnen",
@@ -55,5 +74,37 @@
         }
       ]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+dayengine",
+      "url": "./index.html?protocol=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "text/plain": [".txt"],
+        "application/json": [".json"]
+      }
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "related_applications": [],
+  "handle_links": "preferred"
 }

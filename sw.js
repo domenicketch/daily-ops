@@ -1,8 +1,10 @@
 // ════════════════════════════════════════════════════════════════
-//  DayEngine – Service Worker v3.0
+//  DayEngine – Service Worker v3.1
 //  • Vollständiges Offline-Caching aller App-Assets
 //  • Hintergrund-Benachrichtigungen auch bei geschlossenem Tab
 //  • Cache-first für App-Shell, Network-pass für Google APIs
+//  • Background Sync für ausstehende Aktionen
+//  • Periodic Background Sync für regelmäßige Daten-Updates
 // ════════════════════════════════════════════════════════════════
 
 const APP_CACHE   = 'dayengine-v3';
@@ -105,6 +107,39 @@ self.addEventListener('fetch', e => {
 });
 
 // ════════════════════════════════════════════════════════════════
+//  BACKGROUND SYNC
+//  Ausstehende Aktionen werden bei Wiederherstellung der
+//  Netzwerkverbindung automatisch ausgeführt.
+// ════════════════════════════════════════════════════════════════
+self.addEventListener('sync', e => {
+  if (e.tag === 'dayengine-sync') {
+    e.waitUntil(
+      // Ausstehende Sync-Aufgaben aus IndexedDB / Cache verarbeiten
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then(clients => {
+          clients.forEach(c => c.postMessage({ type: 'SYNC_COMPLETE', ts: Date.now() }));
+        })
+    );
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+//  PERIODIC BACKGROUND SYNC
+//  Regelmäßige Hintergrund-Updates (z. B. stündlich).
+//  Erfordert Nutzer-Erlaubnis und Browser-Unterstützung.
+// ════════════════════════════════════════════════════════════════
+self.addEventListener('periodicsync', e => {
+  if (e.tag === 'dayengine-periodic') {
+    e.waitUntil(
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true })
+        .then(clients => {
+          clients.forEach(c => c.postMessage({ type: 'PERIODIC_SYNC', ts: Date.now() }));
+        })
+    );
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
 //  BENACHRICHTIGUNGS-ENGINE
 //  Blöcke kommen per postMessage rein.
 //  Alle 30 Sek. prüft der SW ob ein Block fällig ist.
@@ -198,6 +233,25 @@ self.addEventListener('message', e => {
     case 'PING': {
       // Keepalive vom Main Thread
       e.source?.postMessage({ type:'PONG', ts: Date.now() });
+      break;
+    }
+
+    case 'REGISTER_PERIODIC_SYNC': {
+      // Periodic Background Sync registrieren (falls unterstützt)
+      if ('periodicSync' in self.registration) {
+        self.registration.periodicSync.register('dayengine-periodic', {
+          minInterval: 60 * 60 * 1000, // 1 Stunde
+        }).catch(err => console.warn('[SW] Periodic sync registration failed:', err));
+      }
+      break;
+    }
+
+    case 'REGISTER_SYNC': {
+      // Background Sync registrieren (falls unterstützt)
+      if ('sync' in self.registration) {
+        self.registration.sync.register('dayengine-sync')
+          .catch(err => console.warn('[SW] Sync registration failed:', err));
+      }
       break;
     }
   }

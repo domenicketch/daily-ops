@@ -991,11 +991,28 @@ window.addEventListener('load', async ()=>{
     try {
       const reg = await navigator.serviceWorker.register('./sw.js');
       console.log('[App] SW registered:', reg.scope);
+
+      // Background Sync registrieren (falls unterstützt)
+      if('sync' in reg) {
+        try { await reg.sync.register('dayengine-sync'); } catch(e) { console.warn('[App] BG Sync:', e); }
+      }
+
+      // Periodic Background Sync registrieren (falls unterstützt)
+      if('periodicSync' in reg) {
+        try {
+          const status = await navigator.permissions.query({ name: 'periodic-background-sync' });
+          if(status.state === 'granted') {
+            await reg.periodicSync.register('dayengine-periodic', { minInterval: 60 * 60 * 1000 });
+          }
+        } catch(e) { console.warn('[App] Periodic Sync:', e); }
+      }
     } catch(e){ console.warn('[App] SW registration failed:', e); }
 
-    // Nachrichten vom SW empfangen (für Custom-Ton)
+    // Nachrichten vom SW empfangen
     navigator.serviceWorker.addEventListener('message', e => {
       if(e.data?.type === 'PLAY_SOUND') playSound();
+      if(e.data?.type === 'SYNC_COMPLETE') console.log('[App] BG Sync complete:', e.data.ts);
+      if(e.data?.type === 'PERIODIC_SYNC') console.log('[App] Periodic Sync:', e.data.ts);
     });
   }
 
