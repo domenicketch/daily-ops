@@ -390,6 +390,92 @@ input[type=range]::-webkit-slider-thumb {
 @keyframes fi { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
 @media(max-width:380px){ .bi-desc{display:none} .sys-name{font-size:22px} }
+
+/* ════════════════════════════════════════════════════
+   SYSTEM EDITOR PANEL
+════════════════════════════════════════════════════ */
+#editor-overlay {
+  position: fixed; inset: 0; z-index: 202;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+#editor-overlay.open { opacity: 1; pointer-events: all; }
+
+#editor-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 203;
+  max-width: 480px; margin: 0 auto;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 0 20px max(32px,env(safe-area-inset-bottom)) 20px;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.32,1,.56,1);
+  max-height: 92dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#editor-panel.open { transform: translateY(0); }
+
+.editor-sys-tabs {
+  display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.editor-tab {
+  flex: 1; min-width: 60px; padding: 8px 4px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--dim);
+  font-family: 'DM Mono',monospace; font-size: 10px; letter-spacing: 1px;
+  cursor: pointer; transition: all .2s; text-align: center;
+}
+.editor-tab.active { border-color: var(--amber); color: var(--amber); background: rgba(245,158,11,.08); }
+
+.editor-block-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+.editor-block {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px;
+}
+.editor-block-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.editor-block-emoji { font-size: 20px; flex-shrink: 0; }
+.editor-block-time {
+  font-family: 'Bebas Neue',sans-serif; font-size: 16px;
+  color: var(--dim); letter-spacing: 1px;
+}
+.editor-block-tag {
+  margin-left: auto;
+  font-family: 'DM Mono',monospace; font-size: 9px;
+  padding: 2px 6px; border-radius: 4px;
+  background: rgba(245,158,11,.1); color: var(--amber); letter-spacing: 1px;
+}
+.editor-field {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 8px 10px; color: var(--text);
+  font-family: 'DM Mono',monospace; font-size: 12px;
+  outline: none; transition: border-color .2s;
+  margin-bottom: 6px; resize: none;
+}
+.editor-field:last-child { margin-bottom: 0; }
+.editor-field:focus { border-color: var(--amber); }
+.editor-field::placeholder { color: var(--dim); }
+.editor-field-label {
+  font-family: 'DM Mono',monospace; font-size: 9px;
+  letter-spacing: 1px; color: var(--dim);
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.editor-actions {
+  display: flex; gap: 8px; margin-top: 4px;
+}
+.editor-reset-btn {
+  padding: 8px 14px; border-radius: 6px;
+  border: 1px solid rgba(239,68,68,.3); background: transparent;
+  color: var(--red); font-family: 'DM Mono',monospace; font-size: 10px;
+  cursor: pointer; transition: all .2s; letter-spacing: 1px;
+}
+.editor-reset-btn:hover { background: rgba(239,68,68,.08); border-color: var(--red); }
 </style>
 </head>
 <body>
@@ -485,6 +571,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="header-right">
       <div class="session-badge" id="sess-badge"><div class="sdot"></div><span>aktiv</span></div>
       <div class="icon-btn" onclick="doReload()">↻</div>
+      <div class="icon-btn" onclick="openEditor()" title="Systeme bearbeiten">✎</div>
       <div class="icon-btn" onclick="openSettings()">⚙</div>
     </div>
   </div>
@@ -635,6 +722,30 @@ input[type=range]::-webkit-slider-thumb {
   <div style="height:12px"></div>
 </div>
 
+<!-- System Editor Panel -->
+<div id="editor-overlay" onclick="closeEditor()"></div>
+<div id="editor-panel">
+  <div class="panel-handle"></div>
+  <div class="panel-title">SYSTEME BEARBEITEN</div>
+
+  <div class="section-label">System auswählen</div>
+  <div class="editor-sys-tabs">
+    <div class="editor-tab active" data-sys="1" onclick="editorSelectSys(1)">SYS 01<br>FRÜHSCHICHT</div>
+    <div class="editor-tab" data-sys="2" onclick="editorSelectSys(2)">SYS 02<br>NACHTSCHICHT</div>
+    <div class="editor-tab" data-sys="3" onclick="editorSelectSys(3)">SYS 03<br>FREI FRÜH</div>
+    <div class="editor-tab" data-sys="4" onclick="editorSelectSys(4)">SYS 04<br>FREI NACHT</div>
+  </div>
+
+  <div class="section-label">Blöcke bearbeiten</div>
+  <div class="editor-block-list" id="editor-block-list"></div>
+
+  <div class="editor-actions">
+    <button class="btn-primary" style="font-size:14px;letter-spacing:1px" onclick="editorSave()">SPEICHERN</button>
+    <button class="editor-reset-btn" onclick="editorReset()">ZURÜCKSETZEN</button>
+  </div>
+  <div style="height:12px"></div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -645,6 +756,11 @@ input[type=range]::-webkit-slider-thumb {
 // ═══════════════════════════════════════════════════════════════
 const KW = "Cottbus Diakonie Zuschka";
 const SK = 'dayengine_v3';
+const SK_BLOCKS = 'dayengine_blocks_v1';
+
+// Benutzerdefinierte Block-Überschreibungen (werden über BLOCKS gelegt)
+// Key-Format: "sysId_blockIndex" z.B. "1_0"
+let customBlocks = {};
 
 const META = {
   1:{lbl:"SYSTEM 01",name:"FRÜHSCHICHT",  desc:"07:00–19:00 · Deep Work am Vormittag · Feierabend ab 18:00",       icon:"🚀"},
@@ -737,6 +853,12 @@ function load(){
     G.customAudio = d.customAudio || null;
     return !!d.clientId;
   } catch(e){ return false; }
+}
+function saveBlocks(){
+  try { localStorage.setItem(SK_BLOCKS, JSON.stringify(customBlocks)); } catch(e){}
+}
+function loadBlocks(){
+  try { customBlocks = JSON.parse(localStorage.getItem(SK_BLOCKS)||'{}'); } catch(e){ customBlocks={}; }
 }
 function clearToken(){ G.accessToken=null; G.tokenExpiry=0; save(); }
 
@@ -934,6 +1056,7 @@ function doLogout(){
 function doReset(){
   if(!confirm('ACHTUNG: Alle Einstellungen, den Ton und die Session löschen?')) return;
   localStorage.removeItem(SK);
+  localStorage.removeItem(SK_BLOCKS);
   location.reload();
 }
 
@@ -1020,6 +1143,7 @@ window.addEventListener('load', async ()=>{
   if('Notification' in window && Notification.permission === 'granted') G.notifGranted = true;
 
   const hasSaved = load();
+  loadBlocks();
   const oh = document.getElementById('origin-hint');
   if(oh) oh.textContent = location.origin;
 
@@ -1161,9 +1285,11 @@ async function loadDash(){
 
 function buildSched(sid){
   const t=new Date(), tm=new Date(t); tm.setDate(tm.getDate()+1);
-  return BLOCKS[sid].map(b=>{
+  return BLOCKS[sid].map((b,i)=>{
     const dt=new Date(b.nd?tm:t); dt.setHours(b.h,b.m,0,0);
-    return {...b,datetime:dt};
+    const key=sid+'_'+i;
+    const ov=customBlocks[key]||{};
+    return {...b, t:ov.t||b.t, d:ov.d||b.d, datetime:dt};
   });
 }
 
@@ -1321,6 +1447,117 @@ async function doReload(){
     try{ await waitToken(); }catch(e){ screen('auth'); return; }
   }
   await loadDash();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM EDITOR
+// ═══════════════════════════════════════════════════════════════
+let _editorSys = 1;
+
+function openEditor(){
+  _editorSys = G.system || 1;
+  renderEditorBlocks(_editorSys);
+  document.querySelectorAll('.editor-tab').forEach(t=>{
+    t.classList.toggle('active', parseInt(t.dataset.sys)===_editorSys);
+  });
+  document.getElementById('editor-overlay').classList.add('open');
+  document.getElementById('editor-panel').classList.add('open');
+}
+
+function closeEditor(){
+  document.getElementById('editor-overlay').classList.remove('open');
+  document.getElementById('editor-panel').classList.remove('open');
+}
+
+function editorSelectSys(sid){
+  _editorSys = sid;
+  document.querySelectorAll('.editor-tab').forEach(t=>{
+    t.classList.toggle('active', parseInt(t.dataset.sys)===sid);
+  });
+  renderEditorBlocks(sid);
+}
+
+function renderEditorBlocks(sid){
+  const list = document.getElementById('editor-block-list');
+  list.innerHTML = '';
+  BLOCKS[sid].forEach((b, i)=>{
+    const key = sid+'_'+i;
+    const ov = customBlocks[key]||{};
+    const timeStr = String(b.h).padStart(2,'0')+':'+String(b.m).padStart(2,'0');
+    const isCustom = !!ov.t || !!ov.d;
+
+    const el = document.createElement('div');
+    el.className = 'editor-block';
+    el.dataset.key = key;
+    el.innerHTML = `
+      <div class="editor-block-header">
+        <span class="editor-block-emoji">${b.e}</span>
+        <span class="editor-block-time">${timeStr}</span>
+        <span class="editor-block-tag"${isCustom?' style="background:rgba(59,130,246,.15);color:#3b82f6"':''}>` +
+          (isCustom ? 'BEARBEITET' : b.tag) + `</span>
+      </div>
+      <div class="editor-field-label">Titel</div>
+      <input class="editor-field" type="text"
+        placeholder="${b.t}"
+        value="${(ov.t||b.t).replace(/"/g,'&quot;')}"
+        data-default-t="${b.t.replace(/"/g,'&quot;')}"
+        data-idx="${i}" data-field="t">
+      <div class="editor-field-label" style="margin-top:4px">Beschreibung</div>
+      <textarea class="editor-field" rows="2"
+        placeholder="${b.d}"
+        data-default-d="${b.d.replace(/"/g,'&quot;')}"
+        data-idx="${i}" data-field="d">${ov.d||b.d}</textarea>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function editorSave(){
+  const sid = _editorSys;
+  document.querySelectorAll('#editor-block-list .editor-block').forEach(el=>{
+    const key = el.dataset.key;
+    const tEl = el.querySelector('[data-field="t"]');
+    const dEl = el.querySelector('[data-field="d"]');
+    const idx  = parseInt(tEl.dataset.idx);
+    const orig = BLOCKS[sid][idx];
+
+    const newT = tEl.value.trim();
+    const newD = dEl.value.trim();
+
+    // Nur speichern wenn abweichend vom Original
+    if(newT !== orig.t || newD !== orig.d){
+      customBlocks[key] = { t: newT||orig.t, d: newD||orig.d };
+    } else {
+      delete customBlocks[key];
+    }
+  });
+
+  saveBlocks();
+
+  // Dashboard neu rendern falls aktives System betroffen
+  if(G.system === sid){
+    G.schedule = buildSched(sid);
+    renderDash();
+    schedNotifs();
+  }
+
+  toast('✅ System ' + sid + ' gespeichert');
+  closeEditor();
+}
+
+function editorReset(){
+  const sid = _editorSys;
+  if(!confirm('Alle Anpassungen für System '+sid+' zurücksetzen?')) return;
+  // Alle Keys für dieses System löschen
+  Object.keys(customBlocks).forEach(k=>{ if(k.startsWith(sid+'_')) delete customBlocks[k]; });
+  saveBlocks();
+  renderEditorBlocks(sid);
+  if(G.system === sid){
+    G.schedule = buildSched(sid);
+    renderDash();
+    schedNotifs();
+  }
+  toast('↺ System ' + sid + ' zurückgesetzt');
 }
 </script>
 </body>

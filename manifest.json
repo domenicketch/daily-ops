@@ -6,7 +6,7 @@
   "start_url": "/daily-ops/index.html",
   "scope": "/daily-ops/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "display_override": ["window-controls-overlay", "tabbed", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#080a0f",
   "theme_color": "#080a0f",
@@ -105,6 +105,16 @@
   "edge_side_panel": {
     "preferred_width": 400
   },
-  "related_applications": [],
+  "scope_extensions": [
+    {
+      "origin": "https://dayengine.app"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "/daily-ops/manifest.json"
+    }
+  ],
   "handle_links": "preferred"
 }
