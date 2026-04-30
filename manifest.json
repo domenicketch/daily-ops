@@ -1,18 +1,52 @@
 {
   "name": "DayEngine",
   "short_name": "DayEngine",
-  "description": "Automatische Tagessteuerung – Domenick Khan Operation System",
-  "start_url": "./",
+  "description": "Automatische Tagessteuerung für Schichtarbeiter – Domenick Khan Operation System",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#080a0f",
   "theme_color": "#080a0f",
-  "orientation": "portrait-primary",
+  "lang": "de",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "categories": ["productivity", "utilities", "lifestyle"],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
-  "categories": ["productivity", "utilities"],
-  "lang": "de"
+  "shortcuts": [
+    {
+      "name": "Heute öffnen",
+      "short_name": "Heute",
+      "description": "Tagesplan direkt öffnen",
+      "url": "./index.html",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [],
+  "related_applications": []
 }

@@ -1,382 +1,663 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!-- ── TWA / Android Meta-Tags ── -->
   <meta name="theme-color" content="#080a0f">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="DayEngine">
+  <meta name="application-name" content="DayEngine">
+  <meta name="msapplication-TileColor" content="#080a0f">
+  <meta name="msapplication-TileImage" content="icon-192.png">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="format-detection" content="telephone=no">
+
   <title>DayEngine</title>
+
+  <!-- ── Icons / Manifest ── -->
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="shortcut icon" href="icon-192.png">
+
+  <!-- ── Fonts ── -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg:        #080a0f;
-      --bg2:       #0f1219;
-      --bg3:       #161b26;
-      --border:    #1e2535;
-      --amber:     #f59e0b;
-      --green:     #10b981;
-      --red:       #ef4444;
-      --text:      #e2e8f0;
-      --text-dim:  #64748b;
-      --text-mid:  #94a3b8;
-      --radius:    12px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100dvh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(245,158,11,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(245,158,11,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-      z-index: 0;
-    }
-    body::after {
-      content: '';
-      position: fixed;
-      top: -200px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 400px;
-      background: radial-gradient(ellipse, rgba(245,158,11,0.06) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 16px 40px; }
 
-    /* HEADER */
-    .header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 16px; }
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
-    .logo-text .name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--amber); line-height:1; }
-    .logo-text .sub { color: var(--text-dim); font-size: 10px; letter-spacing: 1px; font-family: 'DM Mono', monospace; }
-    .header-actions { display: flex; gap: 10px; align-items: center; }
-    .icon-btn {
-      width: 36px; height: 36px; border: 1px solid var(--border);
-      background: var(--bg2); border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-dim); transition: all 0.2s; font-size: 16px;
-    }
-    .icon-btn:hover { border-color: var(--amber); color: var(--amber); }
+<style>
+/* ════════════════════════════════════════════════════
+   DESIGN TOKENS
+════════════════════════════════════════════════════ */
+:root {
+  --bg:       #080a0f;
+  --bg2:      #0f1219;
+  --bg3:      #161b26;
+  --border:   #1e2535;
+  --amber:    #f59e0b;
+  --green:    #10b981;
+  --red:      #ef4444;
+  --blue:     #3b82f6;
+  --text:     #e2e8f0;
+  --dim:      #64748b;
+  --mid:      #94a3b8;
+  --r:        12px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { overflow-x: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,158,11,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,158,11,.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(245,158,11,.06) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.app {
+  position: relative; z-index: 1;
+  max-width: 480px; margin: 0 auto;
+  padding: 0 16px env(safe-area-inset-bottom, 40px);
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+}
 
-    /* SESSION BADGE */
-    .session-badge {
-      display: none; align-items: center; gap: 6px;
-      background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
-      border-radius: 20px; padding: 3px 10px 3px 6px;
-      font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green);
-    }
-    .session-badge.visible { display: inline-flex; }
-    .s-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+/* ════════════════════════════════════════════════════
+   SHARED COMPONENTS
+════════════════════════════════════════════════════ */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 16px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
+.logo-text .name { font-family: 'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--amber); line-height: 1; }
+.logo-text .sub  { color: var(--dim); font-size: 10px; letter-spacing: 1px; font-family: 'DM Mono',monospace; }
+.header-right { display: flex; gap: 8px; align-items: center; }
 
-    /* STATUS BAR */
-    .status-bar {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px; background: var(--bg2);
-      border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px;
-      font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim);
-    }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
-    .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 2s infinite; }
-    .status-dot.amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); animation: blink 2s infinite; }
-    .status-bar .date { margin-left: auto; color: var(--text-mid); }
+.icon-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border); background: var(--bg2);
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--dim); font-size: 16px;
+  transition: border-color .2s, color .2s;
+  -webkit-user-select: none; user-select: none;
+}
+.icon-btn:hover, .icon-btn:active { border-color: var(--amber); color: var(--amber); }
 
-    /* SYSTEM BADGE */
-    .system-badge {
-      background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
-    }
-    .system-badge::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--amber), transparent);
-    }
-    .sys-num { font-family:'Bebas Neue',sans-serif; font-size:72px; line-height:1; color:var(--amber); opacity:.15; position:absolute; right:16px; top:10px; }
-    .sys-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:4px; }
-    .sys-name { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; line-height:1.1; margin-bottom:8px; }
-    .sys-desc { font-size:12px; color:var(--text-mid); line-height:1.5; }
+.session-badge {
+  display: none; align-items: center; gap: 5px;
+  background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.2);
+  border-radius: 20px; padding: 3px 10px 3px 6px;
+  font-family: 'DM Mono',monospace; font-size: 10px; color: var(--green);
+}
+.session-badge.on { display: inline-flex; }
+.sdot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
 
-    /* CURRENT BLOCK */
-    .current-block {
-      background: var(--bg2); border: 1px solid var(--border);
-      border-left: 3px solid var(--green); border-radius: var(--radius);
-      padding: 16px 20px; margin-bottom: 16px;
-    }
-    .cb-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--green); text-transform:uppercase; margin-bottom:8px; }
-    .cb-content { display:flex; align-items:flex-start; gap:12px; }
-    .cb-emoji { font-size:24px; flex-shrink:0; margin-top:2px; }
-    .cb-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; line-height:1; margin-bottom:4px; }
-    .cb-desc { font-size:12px; color:var(--text-mid); line-height:1.5; }
-    .cb-next { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:11px; color:var(--text-dim); font-family:'DM Mono',monospace; }
-    .cb-next strong { color:var(--amber); }
+.status-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px;
+  font-family: 'DM Mono',monospace; font-size: 11px; color: var(--dim);
+}
+.sdot2 { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+.sdot2.green { background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 2s infinite; }
+.sdot2.amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); animation: blink 2s infinite; }
+.status-bar .dt { margin-left: auto; color: var(--mid); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    /* TIMELINE */
-    .timeline-header { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px; padding:0 4px; }
-    .timeline { display:flex; flex-direction:column; gap:4px; margin-bottom:20px; }
-    .block-item { display:flex; align-items:center; gap:12px; padding:10px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:8px; transition:all 0.3s; }
-    .block-item.active { border-color:var(--green); background:rgba(16,185,129,0.06); }
-    .block-item.done { opacity:.4; }
-    .bi-time { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--text-dim); min-width:48px; letter-spacing:1px; }
-    .block-item.active .bi-time { color:var(--green); }
-    .block-item.upcoming .bi-time { color:var(--text-mid); }
-    .bi-emoji { font-size:18px; }
-    .bi-info { flex:1; }
-    .bi-title { font-size:13px; font-weight:600; line-height:1.2; }
-    .bi-desc { font-size:11px; color:var(--text-dim); line-height:1.4; margin-top:1px; }
-    .bi-tag { font-family:'DM Mono',monospace; font-size:9px; padding:2px 6px; border-radius:4px; background:rgba(245,158,11,.1); color:var(--amber); letter-spacing:1px; }
-    .block-item.active .bi-tag { background:rgba(16,185,129,.15); color:var(--green); }
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+}
 
-    /* NOTIF CARD */
-    .notif-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:20px; display:flex; align-items:center; gap:14px; }
-    .notif-icon { font-size:24px; flex-shrink:0; }
-    .notif-text h4 { font-size:13px; font-weight:600; margin-bottom:2px; }
-    .notif-text p { font-size:11px; color:var(--text-dim); }
-    .btn-sm { padding:8px 14px; border-radius:6px; border:1px solid var(--amber); background:transparent; color:var(--amber); font-family:'DM Mono',monospace; font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
-    .btn-sm:hover { background:var(--amber); color:var(--bg); }
-    .btn-sm.granted { border-color:var(--green); color:var(--green); cursor:default; }
-    .btn-sm.granted:hover { background:transparent; }
+.btn-primary {
+  display: block; width: 100%; padding: 14px;
+  background: var(--amber); color: var(--bg); border: none;
+  border-radius: var(--r);
+  font-family: 'Bebas Neue',sans-serif; font-size: 18px; letter-spacing: 2px;
+  cursor: pointer; transition: background .2s;
+}
+.btn-primary:hover, .btn-primary:active { background: #fbbf24; }
+.btn-primary:disabled { opacity: .4; cursor: not-allowed; }
 
-    /* SETUP */
-    .setup-title { font-family:'Bebas Neue',sans-serif; font-size:36px; letter-spacing:2px; line-height:1; margin-bottom:8px; }
-    .setup-title span { color:var(--amber); }
-    .setup-sub { font-size:13px; color:var(--text-dim); margin-bottom:28px; line-height:1.6; }
-    .setup-step { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:12px; }
-    .setup-step-num { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--amber); margin-bottom:4px; }
-    .setup-step h4 { font-size:14px; font-weight:600; margin-bottom:6px; }
-    .setup-step p { font-size:12px; color:var(--text-dim); line-height:1.6; }
-    .setup-step a { color:var(--amber); text-decoration:none; }
-    .setup-step a:hover { text-decoration:underline; }
-    .setup-step code { background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber); }
-    .setup-input { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; outline:none; transition:border-color .2s; margin-top:10px; }
-    .setup-input:focus { border-color:var(--amber); }
-    .setup-input::placeholder { color:var(--text-dim); }
-    .btn-primary { width:100%; padding:14px; background:var(--amber); color:var(--bg); border:none; border-radius:var(--radius); font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; cursor:pointer; transition:all .2s; margin-top:20px; }
-    .btn-primary:hover { background:#fbbf24; }
+.btn-outline {
+  flex: 1; padding: 10px;
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 8px; color: var(--mid);
+  font-family: 'DM Mono',monospace; font-size: 11px;
+  cursor: pointer; transition: border-color .2s, color .2s; letter-spacing: 1px;
+}
+.btn-outline:hover, .btn-outline:active { border-color: var(--amber); color: var(--amber); }
 
-    /* AUTH */
-    .auth-hero { text-align:center; padding:40px 0 28px; }
-    .auth-hero-icon { width:80px; height:80px; border-radius:20px; margin:0 auto 20px; display:block; object-fit:cover; }
-    .auth-title { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:2px; margin-bottom:8px; }
-    .auth-sub { font-size:13px; color:var(--text-dim); line-height:1.6; }
-    .auth-card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius); padding:20px; margin-top:24px; }
-    .auth-card h4 { font-size:13px; font-weight:600; margin-bottom:4px; }
-    .auth-card p { font-size:12px; color:var(--text-dim); margin-bottom:16px; line-height:1.5; }
-    .btn-google { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; padding:13px 20px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-size:14px; font-weight:500; cursor:pointer; transition:all .2s; }
-    .btn-google:hover { border-color:var(--amber); background:rgba(245,158,11,.05); }
-    .btn-google svg { width:18px; height:18px; flex-shrink:0; }
-    .auth-note { text-align:center; font-family:'DM Mono',monospace; font-size:10px; color:var(--text-dim); margin-top:12px; line-height:1.6; }
+.btn-sm {
+  padding: 7px 14px; border-radius: 6px;
+  border: 1px solid var(--amber); background: transparent; color: var(--amber);
+  font-family: 'DM Mono',monospace; font-size: 11px;
+  cursor: pointer; white-space: nowrap; transition: background .2s, color .2s;
+}
+.btn-sm:hover, .btn-sm:active { background: var(--amber); color: var(--bg); }
+.btn-sm.ok { border-color: var(--green); color: var(--green); cursor: default; }
+.btn-sm.ok:hover { background: transparent; }
 
-    /* SPLASH / LOADING / AUTO-LOGIN */
-    .centered-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80dvh; gap:20px; }
-    .splash-icon { width:72px; height:72px; border-radius:18px; object-fit:cover; }
-    .splash-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; color:var(--amber); }
-    .splash-sub { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); }
-    .spinner { width:36px; height:36px; border:2px solid var(--border); border-top-color:var(--amber); border-radius:50%; animation:spin .8s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-    .loading-text { font-family:'DM Mono',monospace; font-size:12px; color:var(--text-dim); }
+/* ════════════════════════════════════════════════════
+   CENTERED (Splash / Loading)
+════════════════════════════════════════════════════ */
+.centered {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 80dvh; gap: 20px; text-align: center;
+}
+.splash-icon { width: 72px; height: 72px; border-radius: 18px; object-fit: cover; }
+.splash-name { font-family: 'Bebas Neue',sans-serif; font-size: 28px; letter-spacing: 3px; color: var(--amber); }
+.splash-sub  { font-family: 'DM Mono',monospace; font-size: 11px; color: var(--dim); }
+.spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--amber); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-family: 'DM Mono',monospace; font-size: 12px; color: var(--dim); }
 
-    /* SURVIVAL */
-    .survival-banner { background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); border-radius:var(--radius); padding:12px 16px; margin-bottom:16px; display:flex; align-items:center; gap:10px; font-size:12px; color:var(--text-mid); }
+/* ════════════════════════════════════════════════════
+   SETUP SCREEN
+════════════════════════════════════════════════════ */
+.setup-title { font-family: 'Bebas Neue',sans-serif; font-size: 36px; letter-spacing: 2px; line-height: 1; margin-bottom: 8px; }
+.setup-title span { color: var(--amber); }
+.setup-sub { font-size: 13px; color: var(--dim); margin-bottom: 24px; line-height: 1.6; }
+.setup-step { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 12px; }
+.step-num { font-family: 'DM Mono',monospace; font-size: 10px; letter-spacing: 2px; color: var(--amber); margin-bottom: 4px; }
+.setup-step h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.setup-step p  { font-size: 12px; color: var(--dim); line-height: 1.6; }
+.setup-step a  { color: var(--amber); text-decoration: none; }
+.setup-step code { background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: 'DM Mono',monospace; font-size: 11px; color: var(--amber); }
+.field { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-family: 'DM Mono',monospace; font-size: 12px; outline: none; transition: border-color .2s; margin-top: 10px; }
+.field:focus { border-color: var(--amber); }
+.field::placeholder { color: var(--dim); }
 
-    /* BUTTONS */
-    .refresh-row { display:flex; gap:8px; margin-bottom:16px; }
-    .btn-outline { flex:1; padding:10px; background:transparent; border:1px solid var(--border); border-radius:8px; color:var(--text-mid); font-family:'DM Mono',monospace; font-size:11px; cursor:pointer; transition:all .2s; letter-spacing:1px; }
-    .btn-outline:hover { border-color:var(--amber); color:var(--amber); }
+/* ════════════════════════════════════════════════════
+   AUTH SCREEN
+════════════════════════════════════════════════════ */
+.auth-hero { text-align: center; padding: 40px 0 28px; }
+.auth-icon { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 20px; display: block; object-fit: cover; }
+.auth-title { font-family: 'Bebas Neue',sans-serif; font-size: 30px; letter-spacing: 2px; margin-bottom: 8px; }
+.auth-sub { font-size: 13px; color: var(--dim); line-height: 1.6; }
+.auth-card { margin-top: 24px; }
+.auth-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.auth-card p  { font-size: 12px; color: var(--dim); margin-bottom: 16px; line-height: 1.5; }
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 13px 20px;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--r);
+  color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color .2s, background .2s;
+}
+.btn-google:hover, .btn-google:active { border-color: var(--amber); background: rgba(245,158,11,.05); }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+.auth-note { text-align: center; font-family: 'DM Mono',monospace; font-size: 10px; color: var(--dim); margin-top: 12px; line-height: 1.6; }
 
-    /* TOAST */
-    .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--bg2); border:1px solid var(--border); border-radius:24px; padding:8px 16px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-mid); transition:transform .3s; z-index:100; white-space:nowrap; }
-    .toast.visible { transform:translateX(-50%) translateY(0); }
+/* ════════════════════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════════════════════ */
+.system-badge {
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+  border: 1px solid var(--border); border-radius: var(--r);
+  padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.system-badge::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+}
+.sys-num  { font-family:'Bebas Neue',sans-serif; font-size:72px; line-height:1; color:var(--amber); opacity:.15; position:absolute; right:16px; top:10px; }
+.sys-lbl  { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--amber); text-transform:uppercase; margin-bottom:4px; }
+.sys-name { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; line-height:1.1; margin-bottom:8px; }
+.sys-desc { font-size:12px; color:var(--mid); line-height:1.5; }
 
-    .footer { text-align:center; font-family:'DM Mono',monospace; font-size:10px; color:var(--text-dim); padding:20px 0 0; letter-spacing:1px; opacity:.5; }
-    .fade-in { animation:fadeIn .4s ease forwards; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    @media(max-width:380px){ .bi-desc{display:none} .sys-name{font-size:22px} }
-  </style>
+.cur-block {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-left: 3px solid var(--green); border-radius: var(--r);
+  padding: 16px 20px; margin-bottom: 16px;
+}
+.cb-lbl   { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--green); text-transform:uppercase; margin-bottom:8px; }
+.cb-row   { display:flex; align-items:flex-start; gap:12px; }
+.cb-emoji { font-size:24px; flex-shrink:0; margin-top:2px; }
+.cb-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; line-height:1; margin-bottom:4px; }
+.cb-desc  { font-size:12px; color:var(--mid); line-height:1.5; }
+.cb-next  { margin-top:10px; padding-top:10px; border-top:1px solid var(--border); font-size:11px; color:var(--dim); font-family:'DM Mono',monospace; }
+.cb-next strong { color:var(--amber); }
+
+.tl-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--dim); text-transform:uppercase; margin-bottom:12px; padding:0 4px; }
+.timeline { display:flex; flex-direction:column; gap:4px; margin-bottom:20px; }
+.bi {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 14px; background:var(--bg2);
+  border:1px solid var(--border); border-radius:8px; transition:all .3s;
+}
+.bi.active { border-color:var(--green); background:rgba(16,185,129,.06); }
+.bi.done   { opacity:.4; }
+.bi-time { font-family:'Bebas Neue',sans-serif; font-size:18px; color:var(--dim); min-width:48px; letter-spacing:1px; }
+.bi.active .bi-time { color:var(--green); }
+.bi.upcoming .bi-time { color:var(--mid); }
+.bi-emoji { font-size:18px; }
+.bi-info  { flex:1; }
+.bi-title { font-size:13px; font-weight:600; line-height:1.2; }
+.bi-desc  { font-size:11px; color:var(--dim); line-height:1.4; margin-top:1px; }
+.bi-tag   { font-family:'DM Mono',monospace; font-size:9px; padding:2px 6px; border-radius:4px; background:rgba(245,158,11,.1); color:var(--amber); letter-spacing:1px; }
+.bi.active .bi-tag { background:rgba(16,185,129,.15); color:var(--green); }
+
+.notif-card { margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+.notif-card .ni { font-size:24px; flex-shrink:0; }
+.notif-card .nt h4 { font-size:13px; font-weight:600; margin-bottom:2px; }
+.notif-card .nt p  { font-size:11px; color:var(--dim); }
+.notif-card .nt { flex:1; }
+
+.row { display:flex; gap:8px; margin-bottom:16px; }
+.survival-banner {
+  background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3);
+  border-radius:var(--r); padding:12px 16px; margin-bottom:16px;
+  display:flex; align-items:center; gap:10px; font-size:12px; color:var(--mid);
+}
+
+.footer { text-align:center; font-family:'DM Mono',monospace; font-size:10px; color:var(--dim); padding:20px 0 0; letter-spacing:1px; opacity:.5; }
+
+/* ════════════════════════════════════════════════════
+   SETTINGS PANEL (Slide-up overlay)
+════════════════════════════════════════════════════ */
+#settings-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+#settings-overlay.open { opacity: 1; pointer-events: all; }
+
+#settings-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 201;
+  max-width: 480px; margin: 0 auto;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 0 20px max(32px,env(safe-area-inset-bottom)) 20px;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.32,1,.56,1);
+  max-height: 90dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#settings-panel.open { transform: translateY(0); }
+
+.panel-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 14px auto 20px; }
+.panel-title  { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--amber); margin-bottom:20px; }
+
+.section-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--dim); text-transform:uppercase; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+
+/* Sound preset cards */
+.sound-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.sound-card {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 10px; padding: 12px 10px; cursor: pointer;
+  transition: border-color .2s; text-align: center;
+  position: relative;
+}
+.sound-card.selected { border-color: var(--amber); background: rgba(245,158,11,.06); }
+.sound-card .sc-emoji { font-size: 22px; margin-bottom: 4px; }
+.sound-card .sc-name  { font-size: 11px; font-weight: 600; }
+.sound-card .sc-desc  { font-size: 10px; color: var(--dim); margin-top: 2px; }
+.sound-card .sc-play  {
+  position: absolute; top: 6px; right: 6px;
+  width: 22px; height: 22px;
+  background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.3);
+  border-radius: 50%; font-size: 9px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.sound-card .sc-play:hover { background: var(--amber); }
+.sound-card.custom-card { grid-column: 1/-1; display:flex; align-items:center; gap:12px; text-align:left; }
+.sound-card.custom-card .cc-info { flex:1; }
+.sound-card.custom-card .cc-name { font-size:12px; font-weight:600; }
+.sound-card.custom-card .cc-sub  { font-size:10px; color:var(--dim); }
+
+.upload-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 6px;
+  border: 1px solid var(--border); background: var(--bg3);
+  color: var(--mid); font-family:'DM Mono',monospace; font-size:11px;
+  cursor: pointer; transition: border-color .2s, color .2s;
+  white-space: nowrap;
+}
+.upload-label:hover { border-color: var(--amber); color: var(--amber); }
+#audio-upload { display: none; }
+
+/* Volume */
+.vol-row { display:flex; align-items:center; gap:12px; margin-top:12px; margin-bottom:20px; }
+.vol-row label { font-size:12px; color:var(--mid); min-width:60px; }
+input[type=range] {
+  flex:1; -webkit-appearance:none; appearance:none; height:3px;
+  background: linear-gradient(to right, var(--amber) 0%, var(--amber) var(--pct,50%), var(--border) var(--pct,50%), var(--border) 100%);
+  border-radius:2px; outline:none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:16px; height:16px;
+  border-radius:50%; background:var(--amber);
+  border:2px solid var(--bg); box-shadow:0 0 4px rgba(245,158,11,.4);
+}
+.vol-val { font-family:'DM Mono',monospace; font-size:11px; color:var(--amber); min-width:32px; text-align:right; }
+
+/* Settings sections */
+.settings-info { font-size:12px; color:var(--dim); line-height:1.6; margin-bottom:16px; padding:12px; background:var(--bg2); border:1px solid var(--border); border-radius:8px; }
+.settings-info strong { color:var(--mid); }
+.danger-zone { margin-top:8px; }
+.btn-danger { width:100%; padding:11px; background:transparent; border:1px solid rgba(239,68,68,.3); border-radius:8px; color:var(--red); font-family:'DM Mono',monospace; font-size:12px; cursor:pointer; transition:all .2s; letter-spacing:1px; margin-bottom:8px; }
+.btn-danger:hover { background:rgba(239,68,68,.08); border-color:var(--red); }
+
+/* ════════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: max(24px,env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 24px; padding: 9px 18px;
+  font-family: 'DM Mono',monospace; font-size: 11px; color: var(--mid);
+  transition: transform .3s; z-index: 300; white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ════════════════════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════════════════════ */
+.fade-in { animation: fi .4s ease forwards; }
+@keyframes fi { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+@media(max-width:380px){ .bi-desc{display:none} .sys-name{font-size:22px} }
+</style>
 </head>
 <body>
 <div class="app">
 
-  <!-- AUTO-LOGIN / SPLASH -->
-  <div id="autologin-screen" class="centered-screen" style="display:none">
-    <img src="icon-192.png" class="splash-icon" alt="DayEngine">
-    <div class="splash-title">DAYENGINE</div>
-    <div class="spinner"></div>
-    <div class="splash-sub" id="splash-sub">Session wird wiederhergestellt...</div>
-  </div>
+<!-- ══ SPLASH / AUTO-LOGIN ════════════════════════════════════ -->
+<div id="sc-splash" class="centered" style="display:none">
+  <img src="icon-192.png" class="splash-icon" alt="DayEngine">
+  <div class="splash-name">DAYENGINE</div>
+  <div class="spinner"></div>
+  <div class="splash-sub" id="splash-sub">Session wird wiederhergestellt...</div>
+</div>
 
-  <!-- SETUP -->
-  <div id="setup-screen" style="display:none">
-    <div class="header">
-      <div class="logo">
-        <img src="icon-192.png" class="logo-img" alt="DayEngine">
-        <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
-      </div>
-    </div>
-    <div class="setup-title">ERSTEINRICHTUNG<br><span>GOOGLE CALENDAR</span></div>
-    <div class="setup-sub">Einmalige Einrichtung. Danach bleibt die Session dauerhaft aktiv – kein erneutes Login nötig.</div>
-
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 01</div>
-      <h4>Google Cloud Projekt erstellen</h4>
-      <p>Öffne <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → Neues Projekt (z.B. "DayEngine") → <strong>Google Calendar API</strong> aktivieren.</p>
-    </div>
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 02</div>
-      <h4>OAuth-Client-ID erstellen</h4>
-      <p>APIs & Dienste → Anmeldedaten → <strong>+ Anmeldedaten erstellen</strong> → OAuth-Client-ID → Typ: <code>Webanwendung</code><br><br>
-      Unter <strong>Autorisierte JavaScript-Quellen</strong>:<br><code id="origin-hint">wird ermittelt...</code></p>
-    </div>
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 03</div>
-      <h4>Client-ID eintragen</h4>
-      <p>Endet auf <code>.apps.googleusercontent.com</code>:</p>
-      <input class="setup-input" id="client-id-input" placeholder="123456789-abc...apps.googleusercontent.com" type="text" autocomplete="off" spellcheck="false">
-    </div>
-    <div class="setup-step">
-      <div class="setup-step-num">SCHRITT 04</div>
-      <h4>Kalender-Event-Titel</h4>
-      <p>Deine Schicht-Events müssen enthalten: <code>Cottbus Diakonie Zuschka</code><br>07:00 Uhr = Frühschicht · 19:00 Uhr = Nachtschicht</p>
-    </div>
-    <button class="btn-primary" onclick="saveSetup()">EINRICHTEN & STARTEN</button>
-  </div>
-
-  <!-- AUTH -->
-  <div id="auth-screen" style="display:none">
-    <div class="header">
-      <div class="logo">
-        <img src="icon-192.png" class="logo-img" alt="DayEngine">
-        <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
-      </div>
-      <div class="header-actions">
-        <div class="icon-btn" onclick="goToSetup()">⚙</div>
-      </div>
-    </div>
-    <div class="auth-hero">
-      <img src="icon-192.png" class="auth-hero-icon" alt="DayEngine">
-      <div class="auth-title">GOOGLE CALENDAR<br>VERBINDEN</div>
-      <div class="auth-sub">Das System liest deinen Kalender, erkennt deine Schicht<br>und plant deinen Tag automatisch.</div>
-    </div>
-    <div class="auth-card">
-      <h4>Einmalig anmelden</h4>
-      <p>Die Session bleibt dauerhaft aktiv. Kein erneutes Login nach dem ersten Mal nötig.</p>
-      <button class="btn-google" onclick="startAuth()">
-        <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-        Mit Google anmelden
-      </button>
-      <div class="auth-note">Nur Lesezugriff auf Google Calendar · Keine Daten werden gespeichert</div>
+<!-- ══ SETUP ═════════════════════════════════════════════════ -->
+<div id="sc-setup" style="display:none">
+  <div class="header">
+    <div class="logo">
+      <img src="icon-192.png" class="logo-img" alt="DayEngine">
+      <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
     </div>
   </div>
 
-  <!-- LOADING -->
-  <div id="loading-screen" class="centered-screen" style="display:none">
-    <div class="header" style="position:absolute;top:0;left:16px;right:16px">
-      <div class="logo">
-        <img src="icon-192.png" class="logo-img" alt="DayEngine">
-        <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
-      </div>
+  <div class="setup-title">ERSTEINRICHTUNG<br><span>GOOGLE CALENDAR</span></div>
+  <div class="setup-sub">Einmalige Einrichtung. Danach bleibt die Session dauerhaft aktiv.</div>
+
+  <div class="setup-step">
+    <div class="step-num">SCHRITT 01</div>
+    <h4>Google Cloud Projekt</h4>
+    <p>Öffne <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → Neues Projekt (z.B. "DayEngine") → <strong>Google Calendar API</strong> aktivieren.</p>
+  </div>
+  <div class="setup-step">
+    <div class="step-num">SCHRITT 02</div>
+    <h4>OAuth-Client-ID erstellen</h4>
+    <p>APIs & Dienste → Anmeldedaten → <strong>+ OAuth-Client-ID</strong> → Typ: <code>Webanwendung</code><br><br>
+    Unter <strong>Autorisierte JavaScript-Quellen</strong>:<br><code id="origin-hint">–</code></p>
+  </div>
+  <div class="setup-step">
+    <div class="step-num">SCHRITT 03</div>
+    <h4>Client-ID eintragen</h4>
+    <p>Endet auf <code>.apps.googleusercontent.com</code>:</p>
+    <input class="field" id="cid-input" placeholder="123456789-abc...apps.googleusercontent.com" type="text" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="setup-step">
+    <div class="step-num">SCHRITT 04</div>
+    <h4>Kalender-Event-Titel</h4>
+    <p>Schicht-Events müssen enthalten: <code>Cottbus Diakonie Zuschka</code><br>07:00 = Früh · 19:00 = Nacht</p>
+  </div>
+  <button class="btn-primary" style="margin-top:20px" onclick="doSetup()">EINRICHTEN & STARTEN</button>
+</div>
+
+<!-- ══ AUTH ══════════════════════════════════════════════════ -->
+<div id="sc-auth" style="display:none">
+  <div class="header">
+    <div class="logo">
+      <img src="icon-192.png" class="logo-img" alt="DayEngine">
+      <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
     </div>
-    <div class="spinner"></div>
-    <div class="loading-text" id="loading-text">Kalender wird geladen...</div>
+    <div class="header-right">
+      <div class="icon-btn" onclick="openSettings()">⚙</div>
+    </div>
   </div>
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" style="display:none">
-    <div class="header">
-      <div class="logo">
-        <img src="icon-192.png" class="logo-img" alt="DayEngine">
-        <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
-      </div>
-      <div class="header-actions">
-        <div class="session-badge" id="session-badge"><div class="s-dot"></div><span id="session-label">aktiv</span></div>
-        <div class="icon-btn" onclick="reload()">↻</div>
-        <div class="icon-btn" onclick="goToSetup()">⚙</div>
-      </div>
-    </div>
-
-    <div class="status-bar">
-      <div class="status-dot" id="status-dot"></div>
-      <span id="status-text">–</span>
-      <span class="date" id="status-date">–</span>
-    </div>
-
-    <div class="notif-card" id="notif-card">
-      <div class="notif-icon">🔔</div>
-      <div class="notif-text">
-        <h4>Benachrichtigungen aktivieren</h4>
-        <p>Für automatische Block-Alerts zu jedem Blockstart</p>
-      </div>
-      <button class="btn-sm" id="notif-btn" onclick="requestNotifPermission()">ERLAUBEN</button>
-    </div>
-
-    <div class="system-badge fade-in">
-      <div class="sys-num" id="sys-num">–</div>
-      <div class="sys-label" id="sys-label">–</div>
-      <div class="sys-name" id="sys-name">–</div>
-      <div class="sys-desc" id="sys-desc">–</div>
-    </div>
-
-    <div class="current-block fade-in" id="current-block" style="display:none">
-      <div class="cb-label">⬤ AKTIVER BLOCK</div>
-      <div class="cb-content">
-        <div class="cb-emoji" id="cb-emoji">–</div>
-        <div class="cb-text">
-          <div class="cb-title" id="cb-title">–</div>
-          <div class="cb-desc" id="cb-desc">–</div>
-        </div>
-      </div>
-      <div class="cb-next" id="cb-next"></div>
-    </div>
-
-    <div class="timeline-header">TAGESPLAN</div>
-    <div class="timeline" id="timeline"></div>
-
-    <div class="refresh-row">
-      <button class="btn-outline" onclick="reload()">↻ AKTUALISIEREN</button>
-      <button class="btn-outline" onclick="toggleSurvival()">🚨 SURVIVAL MODE</button>
-    </div>
-    <div class="footer">DAYENGINE · DOMENICK KHAN · v2.0</div>
+  <div class="auth-hero">
+    <img src="icon-192.png" class="auth-icon" alt="DayEngine">
+    <div class="auth-title">GOOGLE CALENDAR<br>VERBINDEN</div>
+    <div class="auth-sub">Einmalig anmelden. Session bleibt dauerhaft aktiv.</div>
   </div>
+
+  <div class="card auth-card">
+    <h4>Mit Google anmelden</h4>
+    <p>Nur Lesezugriff auf Google Calendar. Kein erneutes Login nach dem ersten Mal.</p>
+    <button class="btn-google" onclick="startAuth()">
+      <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Mit Google anmelden
+    </button>
+    <div class="auth-note">Nur Google Calendar Lesezugriff · Keine Datenweitergabe</div>
+  </div>
+</div>
+
+<!-- ══ LOADING ════════════════════════════════════════════════ -->
+<div id="sc-loading" class="centered" style="display:none">
+  <div class="spinner"></div>
+  <div class="loading-text" id="lt">Kalender wird geladen...</div>
+</div>
+
+<!-- ══ DASHBOARD ══════════════════════════════════════════════ -->
+<div id="sc-dash" style="display:none">
+  <div class="header">
+    <div class="logo">
+      <img src="icon-192.png" class="logo-img" alt="DayEngine">
+      <div class="logo-text"><div class="name">DayEngine</div><div class="sub">OPERATION SYSTEM</div></div>
+    </div>
+    <div class="header-right">
+      <div class="session-badge" id="sess-badge"><div class="sdot"></div><span>aktiv</span></div>
+      <div class="icon-btn" onclick="doReload()">↻</div>
+      <div class="icon-btn" onclick="openSettings()">⚙</div>
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="sdot2" id="sdt"></div>
+    <span id="stxt">–</span>
+    <span class="dt" id="sdt2">–</span>
+  </div>
+
+  <div class="card notif-card" id="notif-card">
+    <div class="ni">🔔</div>
+    <div class="nt">
+      <h4>Benachrichtigungen aktivieren</h4>
+      <p>Für automatische Block-Alerts</p>
+    </div>
+    <button class="btn-sm" id="notif-btn" onclick="reqNotif()">ERLAUBEN</button>
+  </div>
+
+  <div class="system-badge fade-in">
+    <div class="sys-num" id="sn">–</div>
+    <div class="sys-lbl" id="sl">–</div>
+    <div class="sys-name" id="sm">–</div>
+    <div class="sys-desc" id="sd">–</div>
+  </div>
+
+  <div class="cur-block fade-in" id="cb" style="display:none">
+    <div class="cb-lbl">⬤ AKTIVER BLOCK</div>
+    <div class="cb-row">
+      <div class="cb-emoji" id="cbe">–</div>
+      <div>
+        <div class="cb-title" id="cbt">–</div>
+        <div class="cb-desc"  id="cbd">–</div>
+      </div>
+    </div>
+    <div class="cb-next" id="cbn"></div>
+  </div>
+
+  <div class="tl-head">TAGESPLAN</div>
+  <div class="timeline" id="tl"></div>
+
+  <div class="row">
+    <button class="btn-outline" onclick="doReload()">↻ AKTUALISIEREN</button>
+    <button class="btn-outline" onclick="toggleSurvival()">🚨 SURVIVAL</button>
+  </div>
+  <div class="footer">DAYENGINE · DOMENICK KHAN · v3.0</div>
+</div>
 
 </div><!-- .app -->
+
+<!-- ════════════════════════════════════════════════════════════
+     SETTINGS PANEL
+════════════════════════════════════════════════════════════ -->
+<div id="settings-overlay" onclick="closeSettings()"></div>
+<div id="settings-panel">
+  <div class="panel-handle"></div>
+  <div class="panel-title">EINSTELLUNGEN</div>
+
+  <!-- Sound -->
+  <div class="section-label">🔔 Benachrichtigungston</div>
+
+  <div class="sound-grid" id="sound-grid">
+
+    <div class="sound-card" data-snd="gong" onclick="selectSound('gong')">
+      <span class="sc-play" onclick="event.stopPropagation();previewSound('gong')">▶</span>
+      <div class="sc-emoji">🔔</div>
+      <div class="sc-name">Gong</div>
+      <div class="sc-desc">Tief & resonant</div>
+    </div>
+
+    <div class="sound-card" data-snd="chime" onclick="selectSound('chime')">
+      <span class="sc-play" onclick="event.stopPropagation();previewSound('chime')">▶</span>
+      <div class="sc-emoji">✨</div>
+      <div class="sc-name">Chime</div>
+      <div class="sc-desc">Hell & klar</div>
+    </div>
+
+    <div class="sound-card" data-snd="ping" onclick="selectSound('ping')">
+      <span class="sc-play" onclick="event.stopPropagation();previewSound('ping')">▶</span>
+      <div class="sc-emoji">💡</div>
+      <div class="sc-name">Ping</div>
+      <div class="sc-desc">Doppelter Ton</div>
+    </div>
+
+    <div class="sound-card" data-snd="alert" onclick="selectSound('alert')">
+      <span class="sc-play" onclick="event.stopPropagation();previewSound('alert')">▶</span>
+      <div class="sc-emoji">⚡</div>
+      <div class="sc-name">Alert</div>
+      <div class="sc-desc">Urgency-Ton</div>
+    </div>
+
+    <div class="sound-card" data-snd="none" onclick="selectSound('none')">
+      <span class="sc-play" onclick="event.stopPropagation()">–</span>
+      <div class="sc-emoji">🔕</div>
+      <div class="sc-name">Kein Ton</div>
+      <div class="sc-desc">Nur Vibration</div>
+    </div>
+
+    <div class="sound-card custom-card" data-snd="custom" id="custom-card" onclick="selectSound('custom')">
+      <span class="sc-play" id="custom-play" onclick="event.stopPropagation();previewSound('custom')">▶</span>
+      <div class="cc-info">
+        <div class="cc-name" id="custom-name">Eigene Datei</div>
+        <div class="cc-sub"  id="custom-sub">Noch keine Datei hochgeladen</div>
+      </div>
+      <label class="upload-label" onclick="event.stopPropagation()">
+        📂 Hochladen
+        <input type="file" id="audio-upload" accept="audio/*" onchange="onAudioUpload(this)">
+      </label>
+    </div>
+
+  </div>
+
+  <!-- Volume -->
+  <div class="vol-row">
+    <label>Lautstärke</label>
+    <input type="range" id="vol-slider" min="0" max="100" value="70"
+           oninput="onVolChange(this.value)">
+    <div class="vol-val" id="vol-val">70%</div>
+  </div>
+
+  <button class="btn-outline" style="width:100%;margin-bottom:20px" onclick="testSound()">
+    ▶ Test-Ton abspielen
+  </button>
+
+  <!-- Offline Info -->
+  <div class="section-label">📶 Offline & Hintergrund</div>
+  <div class="settings-info">
+    <strong>Offline:</strong> Die App funktioniert vollständig ohne Internet-Verbindung – alle Assets sind gecacht.<br><br>
+    <strong>Hintergrund-Benachrichtigungen:</strong> Funktionieren solange der Browser läuft (auch bei gesperrtem Bildschirm). Wenn der Browser komplett geschlossen ist, können keine Benachrichtigungen gesendet werden – das ist eine Browser-Beschränkung ohne Server-Push.
+  </div>
+
+  <!-- APK Info -->
+  <div class="section-label">📱 Als App installieren (APK)</div>
+  <div class="settings-info">
+    1. Diese App auf <strong>GitHub Pages</strong> hosten<br>
+    2. <a href="https://www.pwabuilder.com" target="_blank" style="color:var(--amber)">pwabuilder.com</a> öffnen → URL eingeben → Android APK generieren<br>
+    3. APK auf Android installieren (Sideloading aktivieren)<br><br>
+    <strong>TWA-kompatibel:</strong> manifest.json ist vollständig für Trusted Web Activity optimiert.
+  </div>
+
+  <!-- Danger zone -->
+  <div class="section-label">⚠️ Konto</div>
+  <div class="danger-zone">
+    <button class="btn-danger" onclick="doLogout()">Abmelden & Session löschen</button>
+    <button class="btn-danger" onclick="doReset()">Komplett zurücksetzen (alle Daten löschen)</button>
+  </div>
+
+  <div style="height:12px"></div>
+</div>
+
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script>
-// ═══════════════════════════════════════
-// SCHEDULE DATA
-// ═══════════════════════════════════════
-const KEYWORD = "Cottbus Diakonie Zuschka";
-const STORAGE_KEY = 'dayengine_v2';
-const REFRESH_MARGIN = 5 * 60 * 1000; // refresh 5 min before expiry
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const KW = "Cottbus Diakonie Zuschka";
+const SK = 'dayengine_v3';
 
-const SYS_META = {
-  1: { label:"SYSTEM 01", name:"FRÜHSCHICHT",  desc:"07:00 – 19:00 · Deep Work am Vormittag · Feierabend ab 18:00", icon:"🚀" },
-  2: { label:"SYSTEM 02", name:"NACHTSCHICHT", desc:"19:00 – 07:00 · Volle Konzentration nachts · Schlaf ab 06:00",  icon:"🌙" },
-  3: { label:"SYSTEM 03", name:"FREI – FRÜH",  desc:"Freier Tag · Früh-Rhythmus · Business & Gym am Vormittag",     icon:"⚡" },
-  4: { label:"SYSTEM 04", name:"FREI – NACHT", desc:"Freier Tag · Nacht-Rhythmus · Socializing zuerst · Deep Work", icon:"🛌" },
+const META = {
+  1:{lbl:"SYSTEM 01",name:"FRÜHSCHICHT",  desc:"07:00–19:00 · Deep Work am Vormittag · Feierabend ab 18:00",       icon:"🚀"},
+  2:{lbl:"SYSTEM 02",name:"NACHTSCHICHT", desc:"19:00–07:00 · Volle Konzentration nachts · Schlaf-Vorbereitung ab 06:00",icon:"🌙"},
+  3:{lbl:"SYSTEM 03",name:"FREI – FRÜH",  desc:"Freier Tag · Früh-Rhythmus · Business & Gym am Vormittag",         icon:"⚡"},
+  4:{lbl:"SYSTEM 04",name:"FREI – NACHT", desc:"Freier Tag · Nacht-Rhythmus · Socializing zuerst · Deep Work nachts",icon:"🛌"},
 };
 
 const BLOCKS = {
   1:[
     {h:6, m:0,  e:"🌅",t:"AUFSTEHEN",     d:"Kaffee machen, fertig machen. Abfahrt in 40 Min!",                  tag:"START"  },
     {h:7, m:0,  e:"💻",t:"DEEP WORK",     d:"Priorität 1: Website / Plugins / Automatisierung",                  tag:"BLOCK 1"},
-    {h:11,m:0,  e:"🍽️",t:"GROSSE MAHLZEIT",d:"Laptop zu. Essen. Mentaler Reset.",                               tag:"ANKER"  },
+    {h:11,m:0,  e:"🍽️",t:"GROSSE MAHLZEIT",d:"Laptop zu. Essen. Mentaler Reset. Bis 12:00.",                    tag:"ANKER"  },
     {h:12,m:0,  e:"📦",t:"MEDIUM WORK",   d:"Pakete schnüren, Bundles, Werbeanzeigen. Bis 15:00.",               tag:"BLOCK 2"},
     {h:15,m:0,  e:"📋",t:"LOW ENERGY",    d:"Recherche, Admin, E-Mails, Social Media. Bis 18:00.",               tag:"BLOCK 3"},
     {h:18,m:0,  e:"🔒",t:"FEIERABEND",    d:"KEIN BUSINESS! Dokumente · Abwaschen · Laptop weg · Letzte Runde", tag:"CLOSE"  },
@@ -396,7 +677,7 @@ const BLOCKS = {
   3:[
     {h:7, m:30, e:"🌅",t:"GUTEN MORGEN",  d:"Frühstück mit der Freundin. Kein Stress.",                         tag:"START"  },
     {h:8, m:30, e:"💻",t:"DEEP WORK",     d:"Business-Produktion. Priorität 1. Bis 11:30.",                     tag:"BLOCK 1"},
-    {h:11,m:30, e:"💪",t:"GYM",           d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",                tag:"GYM"    },
+    {h:11,m:30, e:"💪",t:"GYM",           d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",               tag:"GYM"    },
     {h:14,m:30, e:"🥘",t:"MEAL PREP",     d:"Vorkochen für die Woche. Bis 15:30.",                              tag:"ANKER"  },
     {h:15,m:30, e:"⚓",t:"ANKER PAUSE",   d:"Zeit mit der Freundin. Chill. Kein Business bis 19:30!",           tag:"PAUSE"  },
     {h:19,m:30, e:"📋",t:"REVIEW & PLAN", d:"Rückblick + Vorbereitung nächste Schicht. Bis 20:30.",             tag:"BLOCK 2"},
@@ -405,7 +686,7 @@ const BLOCKS = {
   ],
   4:[
     {h:16,m:0,  e:"🌅",t:"AUFSTEHEN",     d:"Große Mahlzeit + Anker Pause mit der Freundin bis 18:30.",         tag:"START",  nd:false},
-    {h:18,m:30, e:"💪",t:"GYM",           d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",                tag:"GYM",    nd:false},
+    {h:18,m:30, e:"💪",t:"GYM",           d:"⚠️ NUR Beine, Core & Mobilität! Kein Oberkörper.",               tag:"GYM",    nd:false},
     {h:21,m:0,  e:"💻",t:"DEEP WORK",     d:"Business-Kernaufgaben. Volle Konzentration. Bis 00:00.",           tag:"BLOCK 1",nd:false},
     {h:0, m:0,  e:"⚓",t:"GAMING & CHILL",d:"Gaming / Chill / Nichts tun. Kein Business! Bis 02:30.",          tag:"PAUSE",  nd:true },
     {h:2, m:30, e:"📦",t:"MEDIUM WORK",   d:"Kreative Aufgaben. Letzter Block des Tages.",                      tag:"BLOCK 2",nd:true },
@@ -413,394 +694,613 @@ const BLOCKS = {
   ],
 };
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════
-let S = {
-  clientId: '', accessToken: null, tokenExpiry: 0,
-  activeSystem: null, schedule: [], survivalMode: false, notifGranted: false,
+// ═══════════════════════════════════════════════════════════════
+let G = {
+  clientId:'', accessToken:null, tokenExpiry:0,
+  system:null, schedule:[], survivalMode:false, notifGranted:false,
+  sound:'gong', volume:70, customAudio:null,
 };
-let notifTimers=[], clockInterval=null, refreshTimer=null, tokenClient=null;
+let _timers=[], _clock=null, _refresh=null, _TC=null, _keepalive=null;
+const MARGIN = 5*60*1000;
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // STORAGE
-// ═══════════════════════════════════════
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    clientId: S.clientId, accessToken: S.accessToken, tokenExpiry: S.tokenExpiry,
-  }));
-}
-function load() {
+// ═══════════════════════════════════════════════════════════════
+function save(){
   try {
-    const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    S.clientId = d.clientId || '';
-    S.accessToken = d.accessToken || null;
-    S.tokenExpiry = d.tokenExpiry || 0;
-    return !!d.clientId;
-  } catch(e) { return false; }
+    localStorage.setItem(SK, JSON.stringify({
+      clientId:G.clientId, accessToken:G.accessToken, tokenExpiry:G.tokenExpiry,
+      sound:G.sound, volume:G.volume,
+      // Custom audio nur speichern wenn nicht zu groß (< 2MB als base64 ~= 1.5MB raw)
+      customAudio: G.customAudio && G.customAudio.length < 3_000_000 ? G.customAudio : null,
+    }));
+  } catch(e) {
+    // localStorage voll (Custom-Audio zu groß) → ohne Audio speichern
+    localStorage.setItem(SK, JSON.stringify({
+      clientId:G.clientId, accessToken:G.accessToken, tokenExpiry:G.tokenExpiry,
+      sound: G.sound === 'custom' ? 'gong' : G.sound,
+      volume:G.volume, customAudio:null,
+    }));
+    toast('⚠️ Audio-Datei zu groß für Offline-Speicher');
+  }
 }
-function clearToken() { S.accessToken = null; S.tokenExpiry = 0; save(); }
+function load(){
+  try {
+    const d = JSON.parse(localStorage.getItem(SK)||'{}');
+    G.clientId    = d.clientId    || '';
+    G.accessToken = d.accessToken || null;
+    G.tokenExpiry = d.tokenExpiry || 0;
+    G.sound       = d.sound       || 'gong';
+    G.volume      = d.volume      != null ? d.volume : 70;
+    G.customAudio = d.customAudio || null;
+    return !!d.clientId;
+  } catch(e){ return false; }
+}
+function clearToken(){ G.accessToken=null; G.tokenExpiry=0; save(); }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// AUDIO ENGINE
+// ═══════════════════════════════════════════════════════════════
+let _actx = null;
+function getACtx(){
+  if(!_actx || _actx.state === 'closed') _actx = new (window.AudioContext||window.webkitAudioContext)();
+  if(_actx.state === 'suspended') _actx.resume();
+  return _actx;
+}
+
+function synthSound(type){
+  const ctx = getACtx();
+  const vol = G.volume / 100;
+
+  const g = ctx.createGain();
+  g.connect(ctx.destination);
+  const t = ctx.currentTime;
+
+  if(type === 'gong'){
+    // Tiefes Gong: 110Hz, langer Release
+    const o = ctx.createOscillator();
+    o.type = 'sine'; o.frequency.setValueAtTime(110, t);
+    o.frequency.exponentialRampToValueAtTime(55, t+2);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol*0.8, t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001, t+3);
+    o.connect(g); o.start(t); o.stop(t+3);
+
+    // Oberton
+    const o2 = ctx.createOscillator();
+    o2.type = 'sine'; o2.frequency.setValueAtTime(220, t);
+    o2.frequency.exponentialRampToValueAtTime(110, t+1.5);
+    const g2 = ctx.createGain();
+    g2.gain.setValueAtTime(0, t);
+    g2.gain.linearRampToValueAtTime(vol*0.3, t+0.02);
+    g2.gain.exponentialRampToValueAtTime(0.001, t+2);
+    o2.connect(g2); g2.connect(ctx.destination); o2.start(t); o2.stop(t+2);
+
+  } else if(type === 'chime'){
+    // Heller Chime: 880 → 660
+    [880,1320,660].forEach((freq, i) => {
+      const o = ctx.createOscillator();
+      o.type = 'sine'; o.frequency.value = freq;
+      const gn = ctx.createGain();
+      gn.gain.setValueAtTime(0, t+i*0.12);
+      gn.gain.linearRampToValueAtTime(vol*0.6, t+i*0.12+0.02);
+      gn.gain.exponentialRampToValueAtTime(0.001, t+i*0.12+0.8);
+      o.connect(gn); gn.connect(ctx.destination);
+      o.start(t+i*0.12); o.stop(t+i*0.12+0.8);
+    });
+
+  } else if(type === 'ping'){
+    // Doppelter Ping: 1046 → 784
+    [[1046,0],[784,0.2]].forEach(([freq,delay]) => {
+      const o = ctx.createOscillator();
+      o.type = 'triangle'; o.frequency.value = freq;
+      const gn = ctx.createGain();
+      gn.gain.setValueAtTime(0, t+delay);
+      gn.gain.linearRampToValueAtTime(vol*0.7, t+delay+0.01);
+      gn.gain.exponentialRampToValueAtTime(0.001, t+delay+0.5);
+      o.connect(gn); gn.connect(ctx.destination);
+      o.start(t+delay); o.stop(t+delay+0.5);
+    });
+
+  } else if(type === 'alert'){
+    // Urgency: drei schnelle Beeps
+    [0,0.18,0.36].forEach(delay => {
+      const o = ctx.createOscillator();
+      o.type = 'square'; o.frequency.value = 880;
+      const gn = ctx.createGain();
+      gn.gain.setValueAtTime(0, t+delay);
+      gn.gain.linearRampToValueAtTime(vol*0.4, t+delay+0.01);
+      gn.gain.linearRampToValueAtTime(0, t+delay+0.13);
+      o.connect(gn); gn.connect(ctx.destination);
+      o.start(t+delay); o.stop(t+delay+0.15);
+    });
+  }
+}
+
+async function playSound(){
+  if(G.sound === 'none') return;
+  try {
+    if(G.sound === 'custom' && G.customAudio){
+      const audio = new Audio(G.customAudio);
+      audio.volume = G.volume / 100;
+      await audio.play();
+    } else {
+      synthSound(G.sound);
+    }
+  } catch(e){ console.warn('[Audio]', e); }
+}
+
+function previewSound(type){
+  if(type === 'custom' && G.customAudio){
+    const audio = new Audio(G.customAudio);
+    audio.volume = G.volume / 100;
+    audio.play().catch(()=>{});
+  } else if(type !== 'none' && type !== 'custom') {
+    synthSound(type);
+  }
+}
+
+function testSound(){ previewSound(G.sound); }
+
+// ═══════════════════════════════════════════════════════════════
+// SETTINGS UI
+// ═══════════════════════════════════════════════════════════════
+function openSettings(){
+  syncSettingsUI();
+  document.getElementById('settings-overlay').classList.add('open');
+  document.getElementById('settings-panel').classList.add('open');
+}
+function closeSettings(){
+  document.getElementById('settings-overlay').classList.remove('open');
+  document.getElementById('settings-panel').classList.remove('open');
+}
+
+function syncSettingsUI(){
+  // Sound selection
+  document.querySelectorAll('.sound-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.snd === G.sound);
+  });
+  // Custom file name
+  if(G.customAudio){
+    document.getElementById('custom-sub').textContent = 'Datei geladen ✓';
+    document.getElementById('custom-play').style.display = 'flex';
+  } else {
+    document.getElementById('custom-sub').textContent = 'Noch keine Datei hochgeladen';
+    document.getElementById('custom-play').style.display = 'none';
+  }
+  // Volume
+  const vEl = document.getElementById('vol-slider');
+  vEl.value = G.volume;
+  updateVolRange(G.volume);
+  document.getElementById('vol-val').textContent = G.volume + '%';
+  // Client-ID in setup
+  const ci = document.getElementById('cid-input');
+  if(ci && G.clientId) ci.value = G.clientId;
+}
+
+function selectSound(type){
+  if(type === 'custom' && !G.customAudio){
+    document.getElementById('audio-upload').click();
+    return;
+  }
+  G.sound = type;
+  save();
+  document.querySelectorAll('.sound-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.snd === type);
+  });
+  if(type !== 'none') previewSound(type);
+}
+
+function onAudioUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    G.customAudio = e.target.result;
+    G.sound = 'custom';
+    save();
+    document.getElementById('custom-sub').textContent = file.name;
+    document.getElementById('custom-play').style.display = 'flex';
+    document.querySelectorAll('.sound-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.snd === 'custom');
+    });
+    toast('✅ Audio-Datei geladen: ' + file.name);
+    previewSound('custom');
+  };
+  reader.readAsDataURL(file);
+}
+
+function onVolChange(val){
+  G.volume = parseInt(val);
+  document.getElementById('vol-val').textContent = val + '%';
+  updateVolRange(val);
+  save();
+}
+
+function updateVolRange(val){
+  const el = document.getElementById('vol-slider');
+  el.style.setProperty('--pct', val + '%');
+}
+
+function doLogout(){
+  if(!confirm('Session beenden? Du musst dich danach neu anmelden.')) return;
+  clearToken();
+  closeSettings();
+  screen('auth');
+}
+
+function doReset(){
+  if(!confirm('ACHTUNG: Alle Einstellungen, den Ton und die Session löschen?')) return;
+  localStorage.removeItem(SK);
+  location.reload();
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TOKEN
-// ═══════════════════════════════════════
-function tokenOk() { return S.accessToken && Date.now() < S.tokenExpiry - REFRESH_MARGIN; }
+// ═══════════════════════════════════════════════════════════════
+function tokenOk(){ return G.accessToken && Date.now() < G.tokenExpiry - MARGIN; }
 
-function initTC(prompt='') {
-  if (!S.clientId || !window.google?.accounts?.oauth2) return;
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: S.clientId,
+function initTC(prompt=''){
+  if(!G.clientId||!window.google?.accounts?.oauth2) return;
+  _TC = google.accounts.oauth2.initTokenClient({
+    client_id: G.clientId,
     scope: 'https://www.googleapis.com/auth/calendar.readonly',
     prompt,
-    callback: async (r) => {
-      if (r.error) {
-        if (['interaction_required','login_required','consent_required'].includes(r.error)) {
+    callback: r => {
+      if(r.error){
+        if(['interaction_required','login_required','consent_required'].includes(r.error)){
           clearToken(); screen('auth');
         }
         return;
       }
-      S.accessToken = r.access_token;
-      S.tokenExpiry = Date.now() + r.expires_in * 1000;
+      G.accessToken = r.access_token;
+      G.tokenExpiry = Date.now() + r.expires_in*1000;
       save();
       schedRefresh();
-      showToast('🔄 Session erneuert');
+      toast('🔄 Session erneuert');
     },
   });
 }
 
-function silentRefresh() { if (!tokenClient) initTC(); tokenClient?.requestAccessToken(); }
+function silentRefresh(){ if(!_TC) initTC(); _TC?.requestAccessToken(); }
 
-function schedRefresh() {
-  if (refreshTimer) clearTimeout(refreshTimer);
-  const delay = S.tokenExpiry - Date.now() - REFRESH_MARGIN;
-  if (delay > 0) refreshTimer = setTimeout(silentRefresh, delay);
-  else if (S.tokenExpiry > 0) silentRefresh();
+function schedRefresh(){
+  clearTimeout(_refresh);
+  const ms = G.tokenExpiry - Date.now() - MARGIN;
+  if(ms > 0) _refresh = setTimeout(silentRefresh, ms);
+  else if(G.tokenExpiry > 0) silentRefresh();
 }
 
-function waitGIS() {
-  return new Promise(res => {
-    const t = setInterval(() => { if (window.google?.accounts?.oauth2) { clearInterval(t); res(); } }, 80);
-  });
-}
+function waitGIS(){ return new Promise(r=>{ const t=setInterval(()=>{ if(window.google?.accounts?.oauth2){clearInterval(t);r();}},80); }); }
 
-async function waitToken(ms=6000) {
-  return new Promise((res,rej) => {
-    if (tokenOk()) return res();
-    silentRefresh();
-    const t = setInterval(() => { if (tokenOk()) { clearInterval(t); clearTimeout(x); res(); } }, 150);
-    const x = setTimeout(() => { clearInterval(t); rej(new Error('Token timeout')); }, ms);
-  });
-}
+function waitToken(ms=6000){ return new Promise((res,rej)=>{
+  if(tokenOk()) return res();
+  silentRefresh();
+  const t=setInterval(()=>{ if(tokenOk()){clearInterval(t);clearTimeout(x);res();} },150);
+  const x=setTimeout(()=>{ clearInterval(t);rej(new Error('Token timeout')); },ms);
+});}
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════
-window.addEventListener('load', async () => {
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-  if ('Notification' in window && Notification.permission === 'granted') S.notifGranted = true;
+// ═══════════════════════════════════════════════════════════════
+window.addEventListener('load', async ()=>{
+  // Service Worker registrieren
+  if('serviceWorker' in navigator){
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js');
+      console.log('[App] SW registered:', reg.scope);
+    } catch(e){ console.warn('[App] SW registration failed:', e); }
+
+    // Nachrichten vom SW empfangen (für Custom-Ton)
+    navigator.serviceWorker.addEventListener('message', e => {
+      if(e.data?.type === 'PLAY_SOUND') playSound();
+    });
+  }
+
+  // Notification permission check
+  if('Notification' in window && Notification.permission === 'granted') G.notifGranted = true;
 
   const hasSaved = load();
   const oh = document.getElementById('origin-hint');
-  if (oh) oh.textContent = location.origin;
+  if(oh) oh.textContent = location.origin;
 
-  if (!hasSaved || !S.clientId) { screen('setup'); return; }
+  // Volume range init
+  updateVolRange(G.volume);
+  document.getElementById('vol-slider').value = G.volume;
+  document.getElementById('vol-val').textContent = G.volume + '%';
 
-  screen('autologin');
+  if(!hasSaved || !G.clientId){ screen('setup'); return; }
+
+  screen('splash');
   await waitGIS();
 
-  if (tokenOk()) {
-    // Token noch gültig – direkt rein
-    initTC();
-    schedRefresh();
+  if(tokenOk()){
+    initTC(); schedRefresh();
     await loadDash();
-  } else if (S.accessToken) {
-    // Token abgelaufen – stiller Refresh
-    setSplashSub('Token wird erneuert...');
-    let resolved = false;
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: S.clientId,
-      scope: 'https://www.googleapis.com/auth/calendar.readonly',
-      prompt: '',
-      callback: async (r) => {
-        if (r.error) { clearToken(); screen('auth'); return; }
-        S.accessToken = r.access_token;
-        S.tokenExpiry = Date.now() + r.expires_in * 1000;
+  } else if(G.accessToken){
+    setSub('Token wird erneuert...');
+    let done=false;
+    _TC = google.accounts.oauth2.initTokenClient({
+      client_id:G.clientId,
+      scope:'https://www.googleapis.com/auth/calendar.readonly',
+      prompt:'',
+      callback: async r=>{
+        if(r.error){ clearToken(); screen('auth'); return; }
+        G.accessToken=r.access_token; G.tokenExpiry=Date.now()+r.expires_in*1000;
         save();
-        if (!resolved) { resolved = true; initTC(); schedRefresh(); await loadDash(); }
+        if(!done){ done=true; initTC(); schedRefresh(); await loadDash(); }
       },
     });
-    tokenClient.requestAccessToken();
+    _TC.requestAccessToken();
   } else {
     screen('auth');
   }
 
   updateDate();
   setInterval(updateDate, 30000);
+
+  // Keepalive: SW alle 25s anpingen damit er nicht stirbt
+  _keepalive = setInterval(()=>{
+    if(navigator.serviceWorker.controller){
+      navigator.serviceWorker.controller.postMessage({type:'PING'});
+    }
+  }, 25000);
 });
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // SETUP
-// ═══════════════════════════════════════
-function saveSetup() {
-  const v = document.getElementById('client-id-input').value.trim();
-  if (!v || !v.includes('.apps.googleusercontent.com')) {
-    document.getElementById('client-id-input').style.borderColor = 'var(--red)';
-    setTimeout(() => document.getElementById('client-id-input').style.borderColor='', 2000);
+// ═══════════════════════════════════════════════════════════════
+function doSetup(){
+  const v = document.getElementById('cid-input').value.trim();
+  if(!v||!v.includes('.apps.googleusercontent.com')){
+    const el=document.getElementById('cid-input');
+    el.style.borderColor='var(--red)';
+    setTimeout(()=>el.style.borderColor='',2000);
     return;
   }
-  S.clientId = v; save(); screen('auth');
-}
-function goToSetup() {
-  setTimeout(() => {
-    const el = document.getElementById('client-id-input');
-    if (el && S.clientId) el.value = S.clientId;
-    const oh = document.getElementById('origin-hint');
-    if (oh) oh.textContent = location.origin;
-  }, 50);
-  screen('setup');
+  G.clientId=v; save(); screen('auth');
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // AUTH
-// ═══════════════════════════════════════
-async function startAuth() {
-  if (!S.clientId) { screen('setup'); return; }
+// ═══════════════════════════════════════════════════════════════
+async function startAuth(){
+  if(!G.clientId){ screen('setup'); return; }
   await waitGIS();
-  // Erster Login: prompt leer lassen damit Google seinen Consent-Dialog zeigen kann
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: S.clientId,
-    scope: 'https://www.googleapis.com/auth/calendar.readonly',
-    callback: async (r) => {
-      if (r.error) { alert('Anmeldung fehlgeschlagen: ' + r.error); return; }
-      S.accessToken = r.access_token;
-      S.tokenExpiry = Date.now() + r.expires_in * 1000;
-      save();
-      initTC(); schedRefresh();
-      await loadDash();
+  _TC = google.accounts.oauth2.initTokenClient({
+    client_id:G.clientId,
+    scope:'https://www.googleapis.com/auth/calendar.readonly',
+    callback: async r=>{
+      if(r.error){ alert('Anmeldung fehlgeschlagen: '+r.error); return; }
+      G.accessToken=r.access_token; G.tokenExpiry=Date.now()+r.expires_in*1000;
+      save(); initTC(); schedRefresh(); await loadDash();
     },
   });
-  tokenClient.requestAccessToken();
+  _TC.requestAccessToken();
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // CALENDAR
-// ═══════════════════════════════════════
-async function calFetch(dateStr) {
-  if (!tokenOk()) await waitToken();
+// ═══════════════════════════════════════════════════════════════
+async function calFetch(ds){
+  if(!tokenOk()) await waitToken();
   const url = new URL('https://www.googleapis.com/calendar/v3/calendars/primary/events');
-  url.searchParams.set('timeMin', dateStr+'T00:00:00Z');
-  url.searchParams.set('timeMax', dateStr+'T23:59:59Z');
+  url.searchParams.set('timeMin', ds+'T00:00:00Z');
+  url.searchParams.set('timeMax', ds+'T23:59:59Z');
   url.searchParams.set('singleEvents','true');
   url.searchParams.set('orderBy','startTime');
-  url.searchParams.set('q', KEYWORD);
-  const r = await fetch(url, { headers:{ Authorization:`Bearer ${S.accessToken}` }});
-  if (r.status === 401) { clearToken(); screen('auth'); throw new Error('401'); }
-  if (!r.ok) throw new Error('Calendar '+r.status);
-  return (await r.json()).items || [];
+  url.searchParams.set('q', KW);
+  const r = await fetch(url, {headers:{Authorization:`Bearer ${G.accessToken}`}});
+  if(r.status===401){ clearToken(); screen('auth'); throw new Error('401'); }
+  if(!r.ok) throw new Error('Cal '+r.status);
+  return (await r.json()).items||[];
 }
 
-function shiftType(evs) {
-  for (const ev of evs) {
-    if ((ev.summary||'').toLowerCase().includes(KEYWORD.toLowerCase())) {
-      const h = new Date(ev.start?.dateTime||ev.start?.date||'').getHours();
-      if (h>=5&&h<14) return 'frueh';
-      if (h>=17||h<5) return 'nacht';
+function shiftOf(evs){
+  for(const ev of evs){
+    if((ev.summary||'').toLowerCase().includes(KW.toLowerCase())){
+      const h=new Date(ev.start?.dateTime||ev.start?.date||'').getHours();
+      if(h>=5&&h<14) return 'f';
+      if(h>=17||h<5) return 'n';
     }
   }
   return null;
 }
 
-async function detectSystem() {
-  const today = ds(new Date());
-  let st = shiftType(await calFetch(today));
-  if (st==='frueh') return 1;
-  if (st==='nacht') return 2;
-  for (let i=1;i<=14;i++) {
+async function detectSys(){
+  const today=dateStr(new Date());
+  let st=shiftOf(await calFetch(today));
+  if(st==='f') return 1;
+  if(st==='n') return 2;
+  for(let i=1;i<=14;i++){
     const d=new Date(); d.setDate(d.getDate()-i);
-    st = shiftType(await calFetch(ds(d)));
-    if (st==='frueh') return 3;
-    if (st==='nacht') return 4;
+    st=shiftOf(await calFetch(dateStr(d)));
+    if(st==='f') return 3;
+    if(st==='n') return 4;
   }
   return 3;
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // DASHBOARD
-// ═══════════════════════════════════════
-async function loadDash() {
+// ═══════════════════════════════════════════════════════════════
+async function loadDash(){
   screen('loading'); setLT('Kalender wird analysiert...');
   try {
-    const sysId = await detectSystem();
-    S.activeSystem = sysId;
-    S.schedule = buildSched(sysId);
-    setLT('Zeitplan wird geladen...');
-    await wait(400);
-    renderDash();
-    screen('dashboard');
-    startClock();
-    schedNotifs();
-    // Session badge einblenden
-    const b = document.getElementById('session-badge');
-    if (b) b.classList.add('visible');
-  } catch(e) {
+    const sid=await detectSys();
+    G.system=sid; G.schedule=buildSched(sid);
+    setLT('Zeitplan wird geladen...'); await wait(400);
+    renderDash(); screen('dash');
+    startClock(); schedNotifs();
+    document.getElementById('sess-badge').classList.add('on');
+  } catch(e){
     console.error(e);
-    if (!e.message.includes('401')) { setLT('Fehler: '+e.message); await wait(3000); }
-    if (document.getElementById('auth-screen').style.display==='none') screen('auth');
+    if(!e.message.includes('401')){ setLT('Fehler: '+e.message); await wait(2500); }
+    if(document.getElementById('sc-auth').style.display==='none') screen('auth');
   }
 }
 
-function buildSched(sid) {
+function buildSched(sid){
   const t=new Date(), tm=new Date(t); tm.setDate(tm.getDate()+1);
-  return BLOCKS[sid].map(b => {
+  return BLOCKS[sid].map(b=>{
     const dt=new Date(b.nd?tm:t); dt.setHours(b.h,b.m,0,0);
     return {...b,datetime:dt};
   });
 }
 
-function renderDash() {
-  const m = SYS_META[S.activeSystem];
-  document.getElementById('sys-num').textContent = S.activeSystem;
-  document.getElementById('sys-label').textContent = m.label+' · '+m.icon;
-  document.getElementById('sys-name').textContent = m.name;
-  document.getElementById('sys-desc').textContent = m.desc;
-  setStatus('green','AKTIV · System '+S.activeSystem);
-  updateCB(); renderTL(); updateNotifUI();
+function renderDash(){
+  const m=META[G.system];
+  document.getElementById('sn').textContent=G.system;
+  document.getElementById('sl').textContent=m.lbl+' · '+m.icon;
+  document.getElementById('sm').textContent=m.name;
+  document.getElementById('sd').textContent=m.desc;
+  setStatus('green','AKTIV · System '+G.system);
+  updCB(); renderTL(); updateNotifUI();
 }
 
-function updateCB() {
-  const now=new Date(),sc=S.schedule;
+function updCB(){
+  const now=new Date(), sc=G.schedule;
   let idx=-1;
   for(let i=sc.length-1;i>=0;i--) if(sc[i].datetime<=now){idx=i;break;}
-  const el=document.getElementById('current-block');
+  const el=document.getElementById('cb');
   if(idx===-1){el.style.display='none';return;}
   el.style.display='block';
   const b=sc[idx];
-  document.getElementById('cb-emoji').textContent=b.e;
-  document.getElementById('cb-title').textContent=b.t;
-  document.getElementById('cb-desc').textContent=b.d;
-  const nx=sc[idx+1], ne=document.getElementById('cb-next');
+  document.getElementById('cbe').textContent=b.e;
+  document.getElementById('cbt').textContent=b.t;
+  document.getElementById('cbd').textContent=b.d;
+  const nx=sc[idx+1], ne=document.getElementById('cbn');
   if(nx){
-    const diff=Math.round((nx.datetime-now)/60000);
-    const ds2=diff>60?Math.floor(diff/60)+'h '+(diff%60)+'min':diff+' Minuten';
-    ne.innerHTML=`Nächster Block: <strong>${nx.e} ${nx.t}</strong> in ${ds2} (${tf(nx.datetime)})`;
-  }else ne.textContent='Letzter Block des Tages abgeschlossen.';
+    const df=Math.round((nx.datetime-now)/60000);
+    const ds2=df>60?Math.floor(df/60)+'h '+(df%60)+'min':df+' Min.';
+    ne.innerHTML=`Nächster: <strong>${nx.e} ${nx.t}</strong> in ${ds2} (${tf(nx.datetime)})`;
+  } else ne.textContent='Letzter Block des Tages abgeschlossen.';
 }
 
-function renderTL() {
-  const now=new Date(), tl=document.getElementById('timeline');
+function renderTL(){
+  const now=new Date(), tl=document.getElementById('tl');
   tl.innerHTML='';
-  S.schedule.forEach((b,i)=>{
-    const past=b.datetime<now, active=isCur(i);
+  G.schedule.forEach((b,i)=>{
+    const past=b.datetime<now, act=isCur(i);
     const d=document.createElement('div');
-    d.className='block-item'+(active?' active':past?' done':' upcoming');
+    d.className='bi'+(act?' active':past?' done':' upcoming');
     d.innerHTML=`<div class="bi-time">${tf(b.datetime)}</div><div class="bi-emoji">${b.e}</div><div class="bi-info"><div class="bi-title">${b.t}</div><div class="bi-desc">${b.d}</div></div><div class="bi-tag">${b.tag}</div>`;
     tl.appendChild(d);
   });
 }
 
-function isCur(i) {
-  const now=new Date(),b=S.schedule[i],nx=S.schedule[i+1];
-  return b.datetime<=now&&(!nx||nx.datetime>now);
+function isCur(i){ const now=new Date(),b=G.schedule[i],nx=G.schedule[i+1]; return b.datetime<=now&&(!nx||nx.datetime>now); }
+
+function startClock(){
+  clearInterval(_clock);
+  _clock=setInterval(()=>{updCB();renderTL();updateDate();},30000);
 }
 
-function startClock() {
-  if(clockInterval) clearInterval(clockInterval);
-  clockInterval=setInterval(()=>{updateCB();renderTL();updateDate();},30000);
-}
-
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // NOTIFICATIONS
-// ═══════════════════════════════════════
-function schedNotifs() {
-  notifTimers.forEach(clearTimeout); notifTimers=[];
-  if(!S.notifGranted) return;
+// ═══════════════════════════════════════════════════════════════
+function schedNotifs(){
+  _timers.forEach(clearTimeout); _timers=[];
+  if(!G.notifGranted) return;
   const now=new Date();
-  S.schedule.forEach(b=>{
+  G.schedule.forEach(b=>{
     const d=b.datetime-now;
-    if(d>0&&d<86400000) notifTimers.push(setTimeout(()=>fireNotif(b),d));
+    if(d>0&&d<86400000){
+      _timers.push(setTimeout(()=>fireNotif(b), d));
+    }
   });
+  // SW informieren für Hintergrund-Betrieb
   if(navigator.serviceWorker?.controller){
-    navigator.serviceWorker.controller.postMessage({
-      type:'SCHEDULE',
-      blocks:S.schedule.filter(b=>b.datetime>now).map(b=>({time:b.datetime.getTime(),title:b.t,body:b.d,emoji:b.e}))
-    });
+    const blocks=G.schedule.filter(b=>b.datetime>now).map(b=>({
+      time:b.datetime.getTime(), title:b.t, body:b.d, emoji:b.e
+    }));
+    navigator.serviceWorker.controller.postMessage({type:'SCHEDULE', blocks});
   }
 }
 
-function fireNotif(b) {
-  if(!S.notifGranted) return;
-  const opts={body:b.d,icon:'icon-192.png',badge:'icon-192.png',silent:true,tag:'de-'+b.h+'-'+b.m,vibrate:[100,50,100]};
-  if(navigator.serviceWorker?.controller) navigator.serviceWorker.controller.postMessage({type:'NOTIFY',title:b.e+' '+b.t,opts});
-  else new Notification(b.e+' '+b.t,opts);
-  updateCB(); renderTL();
+function fireNotif(b){
+  if(!G.notifGranted) return;
+  playSound(); // Custom-Ton aus Main Thread spielen
+  const opts={body:b.d,icon:'./icon-192.png',badge:'./icon-192.png',silent:true,tag:'de-'+b.h+'-'+b.m,vibrate:[200,100,200]};
+  if(navigator.serviceWorker?.controller){
+    navigator.serviceWorker.controller.postMessage({type:'NOTIFY',title:b.e+' '+b.t,opts});
+  } else if('Notification' in window) {
+    new Notification(b.e+' '+b.t, opts);
+  }
+  updCB(); renderTL();
 }
 
-async function requestNotifPermission() {
+async function reqNotif(){
   const p=await Notification.requestPermission();
-  S.notifGranted=p==='granted';
+  G.notifGranted=p==='granted';
   updateNotifUI();
-  if(S.notifGranted&&S.schedule.length) schedNotifs();
+  if(G.notifGranted&&G.schedule.length) schedNotifs();
 }
 
-function updateNotifUI() {
+function updateNotifUI(){
   const card=document.getElementById('notif-card'),btn=document.getElementById('notif-btn');
   if(!('Notification' in window)){card.style.display='none';return;}
   if(Notification.permission==='granted'){
-    S.notifGranted=true; btn.textContent='✓ AKTIV'; btn.classList.add('granted'); btn.onclick=null;
-    setTimeout(()=>{card.style.display='none';},1500);
+    G.notifGranted=true; btn.textContent='✓ AKTIV'; btn.classList.add('ok'); btn.onclick=null;
+    setTimeout(()=>card.style.display='none',1500);
   } else if(Notification.permission==='denied'){
     btn.textContent='BLOCKIERT'; btn.style.borderColor='var(--red)'; btn.style.color='var(--red)';
   }
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // SURVIVAL
-// ═══════════════════════════════════════
-function toggleSurvival() {
-  S.survivalMode=!S.survivalMode;
-  const ex=document.getElementById('survival-banner');
-  if(S.survivalMode){
+// ═══════════════════════════════════════════════════════════════
+function toggleSurvival(){
+  G.survivalMode=!G.survivalMode;
+  const ex=document.getElementById('surv-banner');
+  if(G.survivalMode){
     if(ex) return;
-    const el=document.createElement('div'); el.id='survival-banner'; el.className='survival-banner';
+    const el=document.createElement('div'); el.id='surv-banner'; el.className='survival-banner';
     el.innerHTML='<div style="font-size:18px">🚨</div><div><strong>SURVIVAL MODE AKTIV</strong><br>Nur Anker (Essen, Schlaf) und Feierabend-Routine. Halte durch!</div>';
     document.querySelector('.system-badge').before(el);
   } else ex?.remove();
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
 // UI HELPERS
-// ═══════════════════════════════════════
-function screen(name) {
-  const map={autologin:'autologin-screen',setup:'setup-screen',auth:'auth-screen',loading:'loading-screen',dashboard:'dashboard'};
+// ═══════════════════════════════════════════════════════════════
+function screen(name){
+  const map={splash:'sc-splash',setup:'sc-setup',auth:'sc-auth',loading:'sc-loading',dash:'sc-dash'};
   Object.values(map).forEach(id=>document.getElementById(id).style.display='none');
   const el=document.getElementById(map[name]);
-  el.style.display=['autologin','loading'].includes(name)?'flex':'block';
+  el.style.display=['splash','loading'].includes(name)?'flex':'block';
 }
-function setStatus(type,text) {
-  document.getElementById('status-dot').className='status-dot'+(type?' '+type:'');
-  document.getElementById('status-text').textContent=text;
-}
-function setLT(t){document.getElementById('loading-text').textContent=t;}
-function setSplashSub(t){const el=document.getElementById('splash-sub');if(el)el.textContent=t;}
+function setStatus(t,x){ document.getElementById('sdt').className='sdot2 '+(t||''); document.getElementById('stxt').textContent=x; }
+function setLT(t){ document.getElementById('lt').textContent=t; }
+function setSub(t){ const el=document.getElementById('splash-sub'); if(el) el.textContent=t; }
 function updateDate(){
-  const el=document.getElementById('status-date'); if(!el) return;
+  const el=document.getElementById('sdt2'); if(!el) return;
   const n=new Date();
   el.textContent=n.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'})+' · '+n.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
 }
-function tf(dt){return dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}
-function ds(d){return d.toISOString().split('T')[0];}
-function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function tf(dt){ return dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}); }
+function dateStr(d){ return d.toISOString().split('T')[0]; }
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
-let toastT=null;
-function showToast(msg){
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('visible');
-  if(toastT) clearTimeout(toastT);
-  toastT=setTimeout(()=>t.classList.remove('visible'),3000);
+let _toastT=null;
+function toast(msg){
+  const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(_toastT); _toastT=setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-async function reload() {
+function openSettings(){
+  syncSettingsUI();
+  document.getElementById('settings-overlay').classList.add('open');
+  document.getElementById('settings-panel').classList.add('open');
+}
+
+async function doReload(){
+  closeSettings();
   if(!tokenOk()){
-    screen('autologin'); setSplashSub('Token wird erneuert...');
+    screen('splash'); setSub('Token wird erneuert...');
     try{ await waitToken(); }catch(e){ screen('auth'); return; }
   }
   await loadDash();
