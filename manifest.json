@@ -2,7 +2,7 @@
   "name": "DayEngine",
   "short_name": "DayEngine",
   "description": "Automatische Tagessteuerung für Schichtarbeiter – Domenick Khan Operation System",
-  "start_url": "./index.html",
+  "start_url": "[https://domenicketch.github.io/daily-ops/index.html](https://domenicketch.github.io/daily-ops/index.html)",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -11,7 +11,11 @@
   "lang": "de",
   "dir": "ltr",
   "prefer_related_applications": false,
-  "categories": ["productivity", "utilities", "lifestyle"],
+  "categories": [
+    "productivity",
+    "utilities",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "icon-192.png",
@@ -44,9 +48,12 @@
       "short_name": "Heute",
       "description": "Tagesplan direkt öffnen",
       "url": "./index.html",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
-  ],
-  "screenshots": [],
-  "related_applications": []
+  ]
 }
