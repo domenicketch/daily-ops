@@ -2,7 +2,7 @@
   "name": "DayEngine",
   "short_name": "DayEngine",
   "description": "Automatische Tagessteuerung für Schichtarbeiter – Domenick Khan Operation System",
-  "start_url": "[https://domenicketch.github.io/daily-ops/index.html](https://domenicketch.github.io/daily-ops/index.html)",
+  "start_url": "/daily-ops/index.html?utm_source=apk&utm_medium=android"
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
