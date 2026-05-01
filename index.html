@@ -476,6 +476,70 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer; transition: all .2s; letter-spacing: 1px;
 }
 .editor-reset-btn:hover { background: rgba(239,68,68,.08); border-color: var(--red); }
+
+/* ════════════════════════════════════════════════════
+   OVERRIDE PANEL
+════════════════════════════════════════════════════ */
+#override-overlay {
+  position: fixed; inset: 0; z-index: 204;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
+}
+#override-overlay.open { opacity: 1; pointer-events: all; }
+
+#override-panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 205;
+  max-width: 480px; margin: 0 auto;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 0 20px max(32px,env(safe-area-inset-bottom)) 20px;
+  transform: translateY(100%);
+  transition: transform .35s cubic-bezier(.32,1,.56,1);
+  max-height: 88dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#override-panel.open { transform: translateY(0); }
+
+.override-status-line {
+  font-family: 'DM Mono',monospace; font-size: 11px;
+  padding: 10px 14px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--green); letter-spacing: .5px;
+}
+
+.override-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 4px;
+}
+
+.override-sys-btn {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 12px; padding: 16px 12px;
+  cursor: pointer; text-align: center;
+  transition: all .2s; color: var(--text);
+}
+.override-sys-btn:hover { border-color: var(--amber); background: rgba(245,158,11,.05); }
+.override-sys-btn.active {
+  border-color: var(--amber);
+  background: rgba(245,158,11,.1);
+  box-shadow: 0 0 0 1px rgba(245,158,11,.3);
+}
+.osb-icon { font-size: 26px; margin-bottom: 6px; }
+.osb-num  { font-family: 'DM Mono',monospace; font-size: 9px; letter-spacing: 2px; color: var(--amber); margin-bottom: 2px; }
+.osb-name { font-family: 'Bebas Neue',sans-serif; font-size: 15px; letter-spacing: 1px; line-height: 1.1; margin-bottom: 3px; }
+.osb-time { font-family: 'DM Mono',monospace; font-size: 9px; color: var(--dim); }
+
+.override-badge {
+  margin-top: 12px; padding: 6px 10px;
+  background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3);
+  border-radius: 6px; font-family: 'DM Mono',monospace;
+  font-size: 10px; color: var(--amber); letter-spacing: .5px;
+  display: inline-block;
+}
 </style>
 </head>
 <body>
@@ -571,6 +635,7 @@ input[type=range]::-webkit-slider-thumb {
     <div class="header-right">
       <div class="session-badge" id="sess-badge"><div class="sdot"></div><span>aktiv</span></div>
       <div class="icon-btn" onclick="doReload()">↻</div>
+      <div class="icon-btn" onclick="openOverridePanel()" title="System manuell wählen" id="override-btn">☰</div>
       <div class="icon-btn" onclick="openEditor()" title="Systeme bearbeiten">✎</div>
       <div class="icon-btn" onclick="openSettings()">⚙</div>
     </div>
@@ -722,6 +787,54 @@ input[type=range]::-webkit-slider-thumb {
   <div style="height:12px"></div>
 </div>
 
+<!-- Override Panel -->
+<div id="override-overlay" onclick="closeOverridePanel()"></div>
+<div id="override-panel">
+  <div class="panel-handle"></div>
+  <div class="panel-title">SYSTEM WÄHLEN</div>
+
+  <div id="override-status" class="override-status-line">🔄 Automatische Synchronisierung aktiv</div>
+
+  <div class="section-label" style="margin-top:16px">System für heute manuell setzen</div>
+
+  <div class="override-grid">
+    <button class="override-sys-btn" data-sys="1" onclick="setManualSystem(1)">
+      <div class="osb-icon">🚀</div>
+      <div class="osb-num">SYS 01</div>
+      <div class="osb-name">FRÜHSCHICHT</div>
+      <div class="osb-time">07:00–19:00</div>
+    </button>
+    <button class="override-sys-btn" data-sys="2" onclick="setManualSystem(2)">
+      <div class="osb-icon">🌙</div>
+      <div class="osb-num">SYS 02</div>
+      <div class="osb-name">NACHTSCHICHT</div>
+      <div class="osb-time">19:00–07:00</div>
+    </button>
+    <button class="override-sys-btn" data-sys="3" onclick="setManualSystem(3)">
+      <div class="osb-icon">⚡</div>
+      <div class="osb-num">SYS 03</div>
+      <div class="osb-name">FREI – FRÜH</div>
+      <div class="osb-time">Früh-Rhythmus</div>
+    </button>
+    <button class="override-sys-btn" data-sys="4" onclick="setManualSystem(4)">
+      <div class="osb-icon">🛌</div>
+      <div class="osb-num">SYS 04</div>
+      <div class="osb-name">FREI – NACHT</div>
+      <div class="osb-time">Nacht-Rhythmus</div>
+    </button>
+  </div>
+
+  <div class="section-label" style="margin-top:20px">Automatik</div>
+  <div class="settings-info">
+    Der manuelle Override gilt nur für <strong>heute</strong>. Ab morgen synchronisiert die App wieder automatisch mit dem Google Kalender.
+  </div>
+  <button class="btn-outline" style="width:100%;margin-bottom:8px" onclick="doOverrideReset()">
+    🔄 Sync jetzt reaktivieren
+  </button>
+
+  <div style="height:12px"></div>
+</div>
+
 <!-- System Editor Panel -->
 <div id="editor-overlay" onclick="closeEditor()"></div>
 <div id="editor-panel">
@@ -756,11 +869,16 @@ input[type=range]::-webkit-slider-thumb {
 // ═══════════════════════════════════════════════════════════════
 const KW = "Cottbus Diakonie Zuschka";
 const SK = 'dayengine_v3';
-const SK_BLOCKS = 'dayengine_blocks_v1';
+const SK_BLOCKS   = 'dayengine_blocks_v1';
+const SK_OVERRIDE = 'dayengine_override_v1';
 
 // Benutzerdefinierte Block-Überschreibungen (werden über BLOCKS gelegt)
 // Key-Format: "sysId_blockIndex" z.B. "1_0"
 let customBlocks = {};
+
+// Manueller System-Override für heute
+// { sys: 1|2|3|4, date: "YYYY-MM-DD" }  oder  null
+let sysOverride = null;
 
 const META = {
   1:{lbl:"SYSTEM 01",name:"FRÜHSCHICHT",  desc:"07:00–19:00 · Deep Work am Vormittag · Feierabend ab 18:00",       icon:"🚀"},
@@ -859,6 +977,24 @@ function saveBlocks(){
 }
 function loadBlocks(){
   try { customBlocks = JSON.parse(localStorage.getItem(SK_BLOCKS)||'{}'); } catch(e){ customBlocks={}; }
+}
+function saveOverride(){
+  try { localStorage.setItem(SK_OVERRIDE, JSON.stringify(sysOverride)); } catch(e){}
+}
+function loadOverride(){
+  try {
+    const d = JSON.parse(localStorage.getItem(SK_OVERRIDE)||'null');
+    if(d && d.date === dateStr(new Date())) {
+      sysOverride = d; // Nur gültig wenn Datum = heute
+    } else {
+      sysOverride = null;
+      localStorage.removeItem(SK_OVERRIDE); // Abgelaufenen Override bereinigen
+    }
+  } catch(e){ sysOverride = null; }
+}
+function clearOverride(){
+  sysOverride = null;
+  localStorage.removeItem(SK_OVERRIDE);
 }
 function clearToken(){ G.accessToken=null; G.tokenExpiry=0; save(); }
 
@@ -1057,6 +1193,7 @@ function doReset(){
   if(!confirm('ACHTUNG: Alle Einstellungen, den Ton und die Session löschen?')) return;
   localStorage.removeItem(SK);
   localStorage.removeItem(SK_BLOCKS);
+  localStorage.removeItem(SK_OVERRIDE);
   location.reload();
 }
 
@@ -1144,6 +1281,7 @@ window.addEventListener('load', async ()=>{
 
   const hasSaved = load();
   loadBlocks();
+  loadOverride();
   const oh = document.getElementById('origin-hint');
   if(oh) oh.textContent = location.origin;
 
@@ -1268,11 +1406,20 @@ async function detectSys(){
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════
 async function loadDash(){
-  screen('loading'); setLT('Kalender wird analysiert...');
+  screen('loading');
   try {
-    const sid=await detectSys();
+    let sid;
+    // Override prüfen: falls heute manuell gesetzt → Kalender überspringen
+    if(sysOverride && sysOverride.date === dateStr(new Date())){
+      sid = sysOverride.sys;
+      setLT('Manuelles System wird geladen...');
+      await wait(400);
+    } else {
+      setLT('Kalender wird analysiert...');
+      sid = await detectSys();
+    }
     G.system=sid; G.schedule=buildSched(sid);
-    setLT('Zeitplan wird geladen...'); await wait(400);
+    setLT('Zeitplan wird geladen...'); await wait(300);
     renderDash(); screen('dash');
     startClock(); schedNotifs();
     document.getElementById('sess-badge').classList.add('on');
@@ -1299,7 +1446,31 @@ function renderDash(){
   document.getElementById('sl').textContent=m.lbl+' · '+m.icon;
   document.getElementById('sm').textContent=m.name;
   document.getElementById('sd').textContent=m.desc;
-  setStatus('green','AKTIV · System '+G.system);
+
+  // Override-Hinweis im System-Badge anzeigen/verstecken
+  let ob = document.getElementById('override-badge');
+  if(sysOverride && sysOverride.date === dateStr(new Date())){
+    if(!ob){
+      ob = document.createElement('div');
+      ob.id = 'override-badge';
+      ob.className = 'override-badge';
+      document.querySelector('.system-badge').appendChild(ob);
+    }
+    ob.innerHTML = '🔒 MANUELL · <span onclick="doOverrideReset()" style="text-decoration:underline;cursor:pointer">Sync wieder aktivieren</span>';
+  } else {
+    ob?.remove();
+  }
+
+  const isOverride = sysOverride && sysOverride.date===dateStr(new Date());
+  setStatus('green', isOverride ? 'MANUELL · System '+G.system : 'AKTIV · System '+G.system);
+
+  // Override-Button im Header färben
+  const oBtn = document.getElementById('override-btn');
+  if(oBtn){
+    oBtn.style.borderColor = isOverride ? 'var(--amber)' : '';
+    oBtn.style.color       = isOverride ? 'var(--amber)' : '';
+  }
+
   updCB(); renderTL(); updateNotifUI();
 }
 
@@ -1558,6 +1729,66 @@ function editorReset(){
     schedNotifs();
   }
   toast('↺ System ' + sid + ' zurückgesetzt');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MANUELLER SYSTEM-OVERRIDE
+// ═══════════════════════════════════════════════════════════════
+
+function openOverridePanel(){
+  // Aktuelle Auswahl markieren
+  document.querySelectorAll('.override-sys-btn').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.sys) === G.system);
+  });
+  // Override-Status anzeigen
+  const info = document.getElementById('override-status');
+  if(sysOverride && sysOverride.date === dateStr(new Date())){
+    info.textContent = '🔒 Manuell aktiv – Sync heute deaktiviert';
+    info.style.color = 'var(--amber)';
+  } else {
+    info.textContent = '🔄 Automatische Synchronisierung aktiv';
+    info.style.color = 'var(--green)';
+  }
+  document.getElementById('override-overlay').classList.add('open');
+  document.getElementById('override-panel').classList.add('open');
+}
+
+function closeOverridePanel(){
+  document.getElementById('override-overlay').classList.remove('open');
+  document.getElementById('override-panel').classList.remove('open');
+}
+
+function setManualSystem(sid){
+  sysOverride = { sys: sid, date: dateStr(new Date()) };
+  saveOverride();
+  G.system = sid;
+  G.schedule = buildSched(sid);
+  renderDash();
+  schedNotifs();
+  // Button-Highlight aktualisieren
+  document.querySelectorAll('.override-sys-btn').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.sys) === sid);
+  });
+  const info = document.getElementById('override-status');
+  info.textContent = '🔒 Manuell aktiv – Sync heute deaktiviert';
+  info.style.color = 'var(--amber)';
+  toast('🔒 System ' + sid + ' manuell aktiviert');
+}
+
+function doOverrideReset(){
+  clearOverride();
+  const info = document.getElementById('override-status');
+  if(info){
+    info.textContent = '🔄 Automatische Synchronisierung aktiv';
+    info.style.color = 'var(--green)';
+  }
+  // Override-Badge entfernen
+  document.getElementById('override-badge')?.remove();
+  setStatus('amber', 'Kalender wird neu geladen...');
+  closeOverridePanel();
+  // Neu laden mit Kalender-Sync
+  doReload();
+  toast('🔄 Sync reaktiviert – Kalender wird geladen');
 }
 </script>
 </body>
